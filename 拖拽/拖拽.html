@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>拖拽</title>
+	<style>
+		#container{
+			width: 400px;
+			height: 300px;
+			border: 1px solid #000;
+			background: #999;
+			/*position: relative;*/
+			position: absolute;
+			/*margin-left: 200px;*/	
+			/*不能这么整，会出问题，记住就行*/
+		}
+		#title{
+			height: 30px;
+			background: #ccc;
+			cursor: move;
+		}
+		#close{
+			float: right;
+		}
+	</style>
+</head>
+<body>
+	<div id="container">
+		<div id="title">
+			我是标题
+			<span id="close">[X]</span>
+		</div>
+		<div id="content">我是内容</div>
+	</div>
+
+	<script>
+		var oTitle = document.getElementById('title');
+		var oContainer = document.getElementById('container');
+		oTitle.onmousedown = function(e){
+			e=e||window.event;//为了支持IE8 以下的兼容性问题。
+			// alert(e.clientX);	输入鼠标点击处到浏览器的左边值
+			// alert(oContainer.offsetLeft); 输入container左边到浏览器左边的值
+			var iDisX = iDisY = 0;
+			iDisX = e.clientX - oContainer.offsetLeft;
+			iDisY = e.clientY - oContainer.offsetTop;//得到鼠标点击出到标题左，上边框的距离。
+			// oTitle.onmousemove = function(e){
+			document.onmousemove = function(e){	//move的时候对象用document，不用oTitle，是因为鼠标移动太快，浏览器的反应速度跟不上，会鼠标会离开。
+				e=e||window.event;
+				var iLeft = e.clientX - iDisX;
+				var iTop = e.clientY - iDisY;
+				if(iLeft < 50){
+					//可以实现磁力吸附。
+					iLeft = 0;
+				}
+				if(iTop > document.documentElement.clientHeight - oContainer.offsetHeight){
+					iTop = document.documentElement.clientHeight - oContainer.offsetHeight;
+				}
+				if(iLeft > document.documentElement.clientWidth-oContainer.offsetWidth){
+					iLeft = ocument.documentElement.clientWidth-oContainer.offsetWidth;
+				}
+				if(iTop < 50){
+					iTop = 0;
+				}
+				oContainer.style.left = iLeft + 'px';
+				oContainer.style.top = iTop +'px'; //前提是需要先给container定位。
+			};
+			document.onmouseup = function(e){
+				document.onmousemove = null;
+			};
+		};
+	</script>
+</body>
+</html>
