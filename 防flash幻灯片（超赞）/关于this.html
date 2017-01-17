@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+</head>
+<body>
+	<ul id="ul1">
+		<li id="l1">11</li>
+		<li>22</li>
+		<li>33</li>
+	</ul>
+	<script>
+
+	//在对象的方法中，就用this好了。
+
+		var aLi = document.getElementsByTagName('li');
+		//数组，有三个li的DOM对象。
+		var oLi1 = document.getElementById('l1');
+		//li对象。
+		// alert(aLi[0] == oLi1);
+		for(var i=0; i<aLi.length; i++){
+			aLi[i].onclick = function(){
+				alert(aLi[0].innerHTML );//每次点击都是1
+				alert(aLi[i].innerHTML );//页面一加载之后，i=2。越界了，变成了最后一个值。
+				alert(this.innerHTML );//单击某一个li，显示自己的文字。this指向方法前的对象.
+				// 包含this的function有没有对象，有对象，this指向对象，没有对象只是一个干不拉几的函数，this指向window，对window的引用。
+		};
+
+		function aa(){
+			alert(this);//当没有对象的时候，只是一个普通函数，没有对象不叫方法,只是一个普通的函数。alert直接得到object window。
+		};
+		aa();
+		//上面代码等同于。
+		window.aa = function(){
+			alert(this);
+		};
+		window.aa();
+
+		//在js中有三种类型的对象
+		//1.DOM对象
+		//2.内置对象（系统中预定义的对象）
+		//3.自定义对象。
+		var o1 = new Object();
+		o1.name = 'list';
+		o1.sayHello = function(){
+			// alert(o1.name);
+			alert(this.name);//只有在对象的方法中，this指向对象。和o1相同。
+			//在对象的方法中，就用this好了。
+		};
+		alert(o1.name);
+		o1.sayHello();//但是在方法的外部，this就不行，只能用对象名o1.
+	</script>
+</body>
+</html>

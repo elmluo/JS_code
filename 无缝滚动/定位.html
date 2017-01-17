@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>定位</title>
+	<style>
+		#div1{
+			width: 200px;
+			height: 200px;
+			background: red;
+		}
+	</style>
+</head>
+<body>
+	<button id="btn">移动</button>
+	<div id="div1" style="left: 10px;"></div>
+	<script>
+
+		var oBtn= document.getElementById('btn');
+		oBtn.onclick=function(){
+			var oDiv=document.getElementById('div1');
+			var timer = setInterval(function(){
+				oDiv.style.position = 'absolute';
+				// alert(oDiv.style.left);
+
+				// oDiv.style.left=parseInt(oDiv.style.left)+2+'px'; 
+				//parseInt:从开头取整，例如，parseInt（123abc）=123，parseInt(123.4)=123;parseInt(abc123)=NaN;
+				if (oDiv.offsetLeft == 300) {
+					clearInterval(timer); //清除定时器的
+				}else{
+					oDiv.style.left = oDiv.offsetLeft + 10 + 'px'; 
+				// offset（偏移），是一个属性。
+				// js中直接调用样式的 值，只有内联才可以
+				}
+				
+
+				//oDiv.style.top="300px";
+				console.log(oDiv.style.left);
+			},100);
+		};
+
+	</script>
+</body>
+</html>

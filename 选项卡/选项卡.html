@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>选项卡 一通百通</title>
+	<style>
+		*{
+			margin: 0;
+			padding: 0;
+		}
+		ul{
+			list-style-type: none;
+		}
+		#container{
+			width:300px;
+			margin: 50px auto;
+		}
+		#tab{
+			height: 30px;
+			border-bottom: 1px solid #000;
+		}
+		#tab li{
+			width: 90px;
+			height: 30px;
+			line-height: 30px;
+			text-align: center;
+			background: #ccc;
+			color: #000;
+			margin-right: 10px;
+			float: left;
+			cursor:pointer;
+		}
+		#tab .selected{
+			color: #fff;
+			background: #000;
+		}
+		#content div{
+			height:269px;
+			background: #ccc;
+			display: none;
+		}
+		#content .selected{
+			display: block;
+		}
+	</style>
+</head>
+<body>
+	<div id="container">
+		<ul id="tab">
+			<li class ="selected">学习</li>
+			<li>努力</li>
+			<li>坚持</li>
+		</ul>
+		<div id="content">
+			<div class ="selected">世界上不断学习的人最可怕</div>
+			<div>世界上不断努力的人最可怕</div>
+			<div>世界上坚持不懈的人最可怕</div>
+		</div>
+	</div>
+	<script>
+		var oUl = document.getElementById('tab');
+		var aLi = oUl.getElementsByTagName('li');
+		var aDiv = document.getElementById('content').getElementsByTagName('div');
+		for(var i=0; i<aLi.length; i++){
+			aLi[i].index = i;
+			aLi[i].onclick = function(){
+				for(var i=0; i<aLi.length; i++){ //用for循环，清空后，再给自己加上样式。
+					aLi[i].className = "";  //class在js中是保留字，所以开发者，在js中用className，代替class。
+					aDiv[i].className ="";
+				}
+					this.className ="selected"; //给自己单击的那个菜单。
+					// aDiv[this.index].style.display ="block";
+					aDiv[this.index].className ="selected";
+			};
+		}
+	</script>
+</body>
+</html>

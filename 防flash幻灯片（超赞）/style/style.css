@@ -1,0 +1,99 @@
+*{
+	margin: 0;
+	padding: 0;
+}
+ul{
+	list-style-type: none;
+}
+#container{
+	width: 400px;
+	height: 445px;
+	margin: 50px auto;
+	position: relative;
+	overflow: hidden;
+	background: #ccc;
+}
+#img{
+	width: 400px;
+	height: 330px;
+	position: relative;
+}
+/*#img img{
+	width: 400px;
+	position: absolute;
+	left: 0;
+	top: 0;
+}*/
+#img li{
+	width: 400px;
+	position: absolute;
+	left: 0;
+	top: 0;
+	overflow: hidden;
+	/*li设置溢出隐藏，图片多的部分就被隐藏掉了。*/
+}
+#img .selected{
+	z-index: 1;
+}
+#thumb{
+	height: 94px;
+	position: relative;
+	/*padding-right: 10px;*/
+	margin-left: 10px;
+	margin-top: 7px;
+}
+#thumb ul{
+	position: absolute;
+	left: 0;
+	top: 0;
+}
+#thumb li{
+	width: 120px;
+	height: 94px;
+	float: left;
+	margin-right: 10px;
+	opacity: 0.4;
+	filter: alpha(opacity:40);
+}
+/*#thumb .selected{
+	opacity: 1;
+	filter: alpha(opacity:100);
+}*/
+#thumb li img{
+	width: 100%;
+}
+#prev,#next{
+	width: 200px;
+	height: 330px;
+	position: absolute;
+	top: 0;
+	z-index: 100000;
+	cursor: pointer;
+}
+#prev{
+	left: 0;
+}
+#next{
+	right: 0;
+}
+#prev span,#next span{
+	width: 60px;
+	height: 60px;
+	display: block;
+	position: absolute;
+	top: 50%;
+	margin-top: -25px;
+	opacity: 0;
+	filter: alpha(opacity:0);
+}
+#prev span{
+	/*background-position:0 0;*/
+	background: url(../images/left-arrow.jpg) no-repeat;
+	/*路径的名称中不能有空格,k但是可以加-来隔开名称单词*/
+	left: 10px;
+}
+#next span{
+	/*background-position:0 60;*/
+	background: url(../images/right-arrow.jpg) no-repeat;
+	right: 10px;
+}

@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Dom 2</title>
+	<style>
+		#div1{
+			height: 200px;
+			background:#f00;
+		}
+	</style>
+</head>
+<body>
+	<div id="div1" style="width:200px" ></div>
+	<script>
+		var oDiv = document.getElementById('div1');
+		alert(oDiv.style.width);//最后显示的是width：200px，兼容性问题，js中只显示内联样式，因为内联样式才像对象属性 值。目前js得到html，得不到css，要得到css样式，有涉及到兼容性问题。
+
+	</script>
+</body>
+</html>

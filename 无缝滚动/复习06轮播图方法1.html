@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>复习轮魔图的js代码</title>
+</head>
+<body>
+	<script>
+		var aLi = document.getElementById("").getElementsByTagName("");
+		var aImg = document.getElementById("").getElementsByTagName("");
+		var Y=0;
+		for(var i=0,i<aLi.length,i++){
+			aLi[i].index=i;
+			aLi[i].onclick=function(){
+				selcetImg(this.index);
+				Y=this.index;
+			};
+		}
+		
+			for(var i=o, i<aLi.length, i++){
+				aLi[X].className="";
+				aImg[X].className="";
+
+
+		function selectImg(X){
+			}
+			aLi[X].className="selected";
+			aImg[X].className="selected";
+		}
+
+		var oLeft=document.getElementById("left");
+		var oRight=document.getElementById("right");
+		oLeft.onclick=function(){
+			Y--;
+			if(Y == -1){Y = aLi.length-1;}
+			selectImg(Y);
+		};
+		oRight.onclick=function(){
+			Y++;
+			if(Y == ali.length){Y = 0;}
+			selectImg(Y);
+		};
+
+		setInterval(funtion(){oRight.onclick();},3000)
+	</script>
+</body>
+</html>

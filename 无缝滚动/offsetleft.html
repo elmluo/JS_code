@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+	<style>
+		#main{
+			width: 400px;
+			height: 400px;
+			background: gray;
+			/*position: relative;*/
+			position: absolute;
+			left:100px;
+			top:100px;
+		}
+		#div1{
+			width: 200px;
+			height: 200px;
+			background: red;
+		}
+	</style>
+</head>
+<body>
+	<div id="main">
+		<div id="div1"></div>
+	</div>
+
+	<script>
+		var oDiv = document.getElementById('div1');
+		var oMain = document.getElementById('main');
+		alert(oMain.offsetLeft);
+		//取值是相对于最近的已定位的祖父元素，如果没有，就相对于浏览器。
+		
+		oMain.offsetLeft=200;
+		//offset的值是只读的，我们可以获取它的值，不带px单位的。但是不能给他赋值。
+	</script> 
+
+</body>
+</html>

@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+	<style>
+		#ul1{
+			list-style: none;
+			width: 336px;
+			margin: 100px auto;
+		}
+		#ul1 li {
+			width: 100px;
+			height: 100px;
+			background: red;
+			float: left;
+			margin-right: 10px;
+			margin-bottom: 10px;
+			border: 1px solid black;
+		}
+	</style>
+</head>
+<body>
+	<ul id="ul1">
+		<li></li>
+		<li></li>
+		<li></li>
+		<li></li>
+		<li></li>
+		<li></li>
+		<li></li>
+		<li></li>
+		<li></li>
+	</ul>
+	<script src="../function/function.js"></script>
+	<script>
+		var aLi = document.getElementsByTagName('li');
+		for(var i=0; i<aLi.length; i++){
+			aLi[i].iLeft = aLi[i].offsetLeft;
+			aLi[i].iTop = aLi[i].offsetTop;
+			aLi[i].innerHTML = aLi[i].offsetLeft +','+ aLi[i].offsetTop;
+			
+			aLi[i].style.left   = aLi[i].offsetLeft + 'px';
+			aLi[i].style.top = aLi[i].offsetTop +'px';
+
+
+		}
+		for(var i=0; i<aLi.length; i++){
+			aLi[i].style.position = "absolute";
+		}
+
+		
+		var iZIndex = 0;
+		for(var i=0; i<aLi.length; i++){
+			aLi[i].onmouseover = function(){
+				this.style.zIndex = ++iZIndex;
+				doMove(this,{left:this.iLeft-50, top:this.iTop-50,width:200,height:200});
+			};
+			aLi[i].onmouseout = function(){
+				doMove(this,{left:this.iLeft,top:this.iTop,width:100,height:100});
+			};
+		}
+	</script>
+</body>
+</html>

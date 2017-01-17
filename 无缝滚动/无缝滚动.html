@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title></title>
+	<style>
+		*{
+			margin: 0;
+			padding: 0;
+		}
+		#container{
+			width: 390px;
+			height: 162px;
+			border: 1px solid #ccc;
+			margin: 50px auto;
+			overflow: hidden;
+			position: relative;
+		}
+		#slider{
+			list-style-type: none;
+			height: 100px;
+			/*列表浮动了，空间就释放了。所以设置ul的高*/
+			position: absolute;
+		}
+		#slider li{
+			width: 120px;
+			height: 100px;
+			background: #000;
+			color:white;
+			text-align: center;
+			line-height: 100px;
+			float: left;
+			margin-right: 10px;
+		}
+		#buttons{
+			/*width: 162px;*/
+			float:left;
+			/*浮动之后，它的宽就被自己的子元素撑开了*/
+			height: 30px;
+			text-align: center;
+			/*margin: 0 auto;*/
+
+			position: absolute;
+			left: 50%;
+			top: 120px; 
+			margin-left: -81px;
+			/*给浮动的元素居中，让父级的框架宽度和span一样。给button定位。*/
+		}
+		#buttons span{
+			float:left;
+			/*可以横过来，又可以设置宽和高，如果是display的话就上下重叠了。*/
+			/*display: inline-block;*//*IE6不支持所以用上面的position*/
+			width: 76px;
+			height: 30px;
+			line-height: 30px;
+			margin-right: 10px;
+			text-align: center;
+			background: #ccc;
+		}
+	</style>
+</head>
+<body>
+	<div id="container">
+		<ul id="slider">
+			<li>1</li>
+			<li>2</li>
+			<li>3</li>
+			<li>4</li>
+		</ul>
+		<div id="buttons">
+			<span id="left">&lt;&lt;向左</span>
+			<span id="right" style="margin-right:0;">向右&gt;&gt;</span>
+		</div>
+		
+	</div>
+	<script>
+	var iSpeed = -2;
+		var oSlider = document.getElementById('slider');
+		oSlider.innerHTML += oSlider.innerHTML;
+		//获得标签之间的全部内容，包括内部标签。复制一遍。
+		var aLi = oSlider.getElementsByTagName('li');
+		oSlider.style.width = aLi.length * aLi[0].offsetWidth + aLi.length *10 + 'px';
+		// oSlider.style.position = 'absolute';
+		setInterval(function(){
+			if(oSlider.offsetLeft <= -oSlider.offsetWidth/2){
+				oSlider.style.left = 0;
+			}
+			if(oSlider.offsetLeft > 0){
+				oSlider.style.left = -oSlider.offsetWidth /2 +'px';
+			}
+			oSlider.style.left = oSlider.offsetLeft+iSpeed+'px';
+		},30);
+
+		var oLeft = document.getElementById('left');
+		oLeft.onmouseover = function(){
+			iSpeed = -2;
+		};
+		var oRight = document.getElementById('right');
+		oRight.onmouseover = function(){
+			iSpeed = 2;
+		};
+	</script>
+</body> 
+</html>
