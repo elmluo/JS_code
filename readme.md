@@ -9,7 +9,7 @@
   - 5.2.6操作：  `comcat("","")/slice(1,4)/splice(2,1,"","") 参数二删、三插替`
   - 5.2.7位置： `indexOf(4)/lastIndexOf(3)`
   - 5.2.8迭代(高级)：`参数func每一项运行的函数 every(func)/some(func)/filter(func)/forEach(func)/map()/`
-  - 5.2.9缩小(高级)： `reduce( func(prev, cur, index, array){}, 基项prev )/reduceRight()` 用于数组（flatten）扁平化
+  - 5.2.9归并(高级)： `reduce( func(prev, cur, index, array){}, 基项prev )/reduceRight()` 用于数组（flatten）扁平化
  - 5.3Date类型
   - 5.3.1继承的方法： 
   - 5.3.2日期格式化： 
