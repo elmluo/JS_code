@@ -51,7 +51,7 @@
   arr.filter([function(T=, number, Array.<T>)] callback, [*, optional] thisArg)             Array.<T>
   arr.forEach([function(T=, number, Array.<T>)] callback, [*, optional] thisArg)            void
   arr.map([function(T=, number, Array.<T>)] callback, [*,optional] thisArg)                 Array.<T>
-  arr.reduce([function(*, *=, number, Array.<T>)] callback,[*,optional] initialValue)       *   
-  arr.reduceRight([function(*, *=, number, Array.<T>)] callback,[*,optional] initialValue)  *
+  arr.reduce([function(prev, cur, number, Array.<T>)] callback,[*,optional] initialValue)         *   
+  arr.reduceRight([function(prev, cur, number, Array.<T>)] callback,[*,optional] initialValue)    *
   
 ```
