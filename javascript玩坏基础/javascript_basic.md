@@ -13,14 +13,17 @@
   str.substr([Number] start, [Number,optional] length)                  newStr
   str.substring([Number] start, [Number,optional] end)                  newStr
   str.indexOf([String] searchString)                                    index/-1  
+  
 ```   
 
 ## JS Number
 
 ```javascript
   numObj = new Number()
-  num.toString([Number,optional] radix)                           string
-  num.toLocalString([String|String[], optional] )                 string
-  num.toFixed([Number,optional] fractionalDigits, optional)       string
-  num.toExponential([Number,optional] fractionalDigits optional)  string
+  num.toString([Number,optional] radix)                             string
+  num.toLocalString([String|String[], optional] )                   string
+  num.toFixed([Number,optional] fractionalDigits, optional)         string
+  num.toExponential([Number,optional] fractionalDigits ,optional)   string
+  num.toPrecision([Number,optional] precision, optional)            string
+  num.valueOf()                                                     Number
 ```
