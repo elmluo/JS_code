@@ -22,8 +22,26 @@
   numObj = new Number()
   num.toString([Number,optional] radix)                             string
   num.toLocalString([String|String[], optional] )                   string
-  num.toFixed([Number,optional] fractionalDigits, optional)         string
-  num.toExponential([Number,optional] fractionalDigits ,optional)   string
-  num.toPrecision([Number,optional] precision, optional)            string
+  num.toFixed([Number,optional] fractionalDigits)                   string
+  num.toExponential([Number,optional] fractionalDigits)             string
+  num.toPrecision([Number,optional] precision)                      string
   num.valueOf()                                                     Number
+```
+
+## JS Array
+
+```javascript
+  arr = new Array()/ [];
+  arr.concat([T|Array.<T>, optional] items)       Array.<T>
+  arr.join([String, optional] separator)          string
+  arr.pop()                                       T, enditem
+  arr.push([T, optional] items)                   Number
+  arr.shift()                                     T, firstItem 
+  arr.unshift([T, optional] items)                Nmuber                                             
+  arr.slice([Number,optional] start, [Number, optional] end)        Array.<T>
+  arr.splice([Number,optional] start, [Number, optional] end)       deletedArr
+  arr.reverse()                                   Array.<T>
+  arr.sort([Function, optional] compareFn)        Array.<T>
+  arr.toString()                                  string
+  arr.valueOf()                                   Array.<T>
 ```
