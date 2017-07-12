@@ -44,4 +44,6 @@
   arr.sort([Function, optional] compareFn)        Array.<T>
   arr.toString()                                  string
   arr.valueOf()                                   Array.<T>
+  Array.isArray([*] obj)                          boolean
+  arr.every([function(T=,number,Array.<T>)], [*,optional])              boolean
 ```
