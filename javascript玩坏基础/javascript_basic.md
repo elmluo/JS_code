@@ -34,6 +34,7 @@
   arr = new Array()/ [];
   arr.concat([T|Array.<T>, optional] items)       Array.<T>
   arr.join([String, optional] separator)          string
+  arr.split([String, optional] separator)         Array.<T>
   arr.pop()                                       T, enditem
   arr.push([T, optional] items)                   Number
   arr.shift()                                     T, firstItem 
