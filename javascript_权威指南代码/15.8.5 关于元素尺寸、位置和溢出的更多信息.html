@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>关于元素尺寸、位置和溢出的更多信息</title>
+	<style>
+		.grandfather{
+			/*position: relative;*/
+			/*margin: 20px;*/
+			/*border: 5px solid #000000;*/
+			/*padding: 20px;*/
+			background: yellow;
+		}
+		.grandfather .uncle {
+			/*display: inline-block;*/
+			box-sizing: border-box;
+			/*margin: 20px;*/
+			/*border: 5px solid #000000;*/
+			/*padding: 20px;*/
+			background: pink;
+		}
+		.grandfather .father {
+			box-sizing: border-box;
+			/*display: inline-block;*/
+			/*position: absolute;*/
+			/*margin: 40px;*/
+			/*border: 5px solid #000000;*/
+			/*padding: 20px;*/
+			background: blue;
+			overflow: hidden;
+		}
+		.grandfather .father .child{
+			/*position: absolute;*/
+			margin: 20px;
+			/*border: 5px solid #000000;*/
+			/*padding: 20px;	*/
+			background: red;
+		}
+	</style>
+</head>
+<body>
+	<div class="grandfather">
+		<span>这是爷爷</span>
+		<div class="uncle">
+			<span>这是叔叔</span>
+		</div>
+		<div class="father">
+			<!-- <span>这是爸爸</span> -->
+			<!-- <div style="height: 1px; width:0"></div> -->
+			<div class="child">
+				<span>这是儿子</span>
+			</div>
+		</div>
+	</div>
+	<script>
+		
+	</script>
+</body>
+</html>

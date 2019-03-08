@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>多个元素的过渡</title>
+    <script src="vue.js"></script>
+</head>
+<body>
+    <div>
+        <span>即使技术上没有必要, 给transition组件中多个元素设置key是个很好的实践</span>
+        <textarea name="intro" id="intro" cols="50" rows="10">我们之后讨论多个组件的过渡，对于原生标签可以使用 v-if/v-else 。最常见的多标签过渡是一个列表和描述这个列表为空消息的元素</textarea>
+
+        <div id="demo1">
+            <transition>
+                <!-- <button v-if="isEditing" key="save">Save</button>
+                <button v-else key="edit">Edit</button> -->
+                <button v-bind:key="isEditing">
+                    {{isEditing ? "Save" : "Edit"}}
+                </button>
+            </transition>
+        </div>
+
+        <div id="demo2">
+            <span>使用多个v-if的多个元素的过渡可以重写绑定了动态属性的单个元素过渡</span>
+            <transition>
+                <button v-if="docState === 'saved'" key="saved">Edit</button>
+                <button v-if="docState === 'edited'" key="edited">Save</button>
+                <button v-if="docState === 'editing'" key="editing">Cancel</button>
+
+                <button v-bind:key="docState">
+                    {{buttonMessage}}
+                </button>
+            </transition>
+        </div>
+    </div>
+
+    <script>
+        new Vue({
+            el: '#demo1',
+            data() {
+                return {
+                    isEditing: true,
+                }
+            }
+        })
+
+        new Vue({
+            el: '#demo2',
+            data() {
+                return{
+                    docState: 'saved'
+                }
+            },
+            computed: {
+                buttonMessage() {
+                    switch(this.docState) {
+                        case 'saved' : return "Edit";
+                        case 'edited': return 'Save';
+                        case 'editing': return "Cancel";
+                    }
+                }
+            },
+        })
+    </script>
+</body>
+</html>

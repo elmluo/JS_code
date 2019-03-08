@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>显性过渡用持续时间</title>
+    <link href="https://cdn.jsdelivr.net/npm/animate.css@3.5.1" rel="stylesheet" type="text/css">
+    <script src="vue.js"></script>
+</head>
+<body>
+        <div>
+            <span>:durationj="{enter: 500, leave: 800}"</span>
+            <span>貌似有第三方样式组件的时候，会没有效果</span>            
+            <div id="example-3">
+                <button @click="show = !show">
+                    Toggle render
+                </button>
+                <transition name="custom-classes-transition"
+                    :duration="{enter: 2000, leave: 2000}"
+                    enter-active-class="animated tada"
+                    leave-active-class="animated bounceOutRight"
+                >
+                    <p v-if="show">no duration</p>
+                </transition>
+
+                <button @click="show2 = !show2">
+                    Toggle render
+                </button>
+                <transition :duration="1000"
+                >
+                    <p v-if="show2">durations</p>
+            </transition>
+            </div>
+        </div>
+    
+        <script>
+            new Vue({
+                el: '#example-3',
+                data() {
+                    return {
+                        show: true,
+                        show2: true
+                    }
+                }
+            })
+        </script>
+</body>
+</html>

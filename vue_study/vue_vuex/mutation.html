@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>vuex_mutations</title>
+	<script src='vue.js'></script>
+	<script src='mutation-types.js'></script>
+	<script src='vuex.js'></script>
+</head>
+<body>
+	<h1>更改Vuex的store中的状态的唯一方法是提交mutation，类似于时间监听，vue中mutation都是同步事务</h1>
+	<div class="app">
+	</div>
+	<script>
+		// import Vue from './vue.js'
+		// import Vuex from './vuex.js';
+		// import INCREMENT from './mutation-types.js'
+
+		/**
+		 * [store状态管理]
+		 * @param  {[type]} state [description]
+		 * @return {[type]}       [description]
+		 */
+		const store = new Vuex.Store({
+			state: {
+				count: 1
+			},
+
+			//你可以向 store.commit 传入额外的第二发参数，即 mutation 的 载荷（payload）
+			//在大多数情况下，载荷应该是一个对象，这样可以包含多个字段并且记录的 mutation 会更易读
+			mutations: {
+				[INCREMENT](state, payload){
+					state.count += payload.amount;
+				}
+			}
+		})
+
+		/**
+		 * Mutation 需遵守 Vue 的响应规则
+		 * 	最好提前在你的 store 中初始化好所有所需属性。
+		 * 	当需要在对象上添加新属性时，你应该
+		 * 	
+		 * 		Vue.set(obj, 'newProp', 123);
+		 * 		state.obj = {...state.obj, newProp, 132456}
+		 */
+
+
+		/**
+		 * vue根实例
+		 * @type {Vue}
+		 */
+		rootVm = new Vue({
+			el: '.app',
+			store,
+			template: '\
+				<div class="container">\
+					<span>数量：{{count}}</span>\
+				</div>\
+			',
+			data() {
+				return {
+
+				}
+			},
+			computed: {
+				...Vuex.mapState(['count'])
+			},
+			methods: {
+				// 你在组件中使用 this.$store.dispatch('xxx') 分发 action，或者使用 mapActions 辅助函数将组件的 methods 映射为 store.dispatch 调用（需要先在根节点注入 store）：
+				...Vuex.mapActions([
+					' increment'
+					])
+			},
+			created() {
+				let timer = setInterval(()=> {
+					this.$store.commit(INCREMENT, {
+						amount: 3
+					})
+					console.log(this.$store.state.count);
+				}, 1000)
+				
+			}
+		})
+	</script>
+</body>
+</html>

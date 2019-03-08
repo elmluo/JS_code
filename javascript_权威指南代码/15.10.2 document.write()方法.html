@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>document.write()方法</title>
+</head>
+<body>
+	<div id="container"></div>
+	<script>
+		document.write("<p>Document title: " + document.title + "</p>");
+		document.write("<br/>URL:" + decodeURIComponent(document.URL));
+		document.write("<br/>Referred by:" + document.referrer);
+		document.write("<br>Modified on" + document.lastModified);
+		document.write("Access on:" + new Date());
+
+		/**
+		 * 运行时候，计算和输出文本代码
+		 * 利用指定元素的innerHTML属性包装了简单的write()和close()方法。
+		 * 针对innerHTML属性的流逝API
+		 */
+		
+		// 为设置元素的innerHTML定义简单的“流式”API
+		function ElementStream(elt) {
+			if (typeof elt === "string") {
+				elt = document.getElementById(elt);
+			}
+			this.elt = elt;
+			this.buffer = "";
+		}
+
+		// 连接所有参数，添加到缓存中
+		ElementStream.prototype.writeln = function() {
+			this.buffer += Array.prototype.join.call(arguments, "") + "\n";
+		};
+
+		// 从缓存设置元素内容，然后清空缓存
+		ElementStream.prototype.close = function() {
+			this.elt.innerHTML = this.buffer;
+			this.buffer = "";
+		}
+
+
+		var eleObject = new ElementStream("container");
+		eleObject.writeln("超哥哥1号", "超弟弟2号", "超妹妹3号")
+		eleObject.close();
+
+
+
+
+
+	</script>
+</body>
+</html>

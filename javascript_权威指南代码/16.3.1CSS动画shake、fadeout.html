@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>css动画fade/shakeout案例</title>
+	<style>
+		#container {
+			background: yellow;
+			width: 100px;
+			height: 100px;
+			line-height: 100px;
+			text-align: center;
+			border: 1px solid red;
+			border-radius: 4px;
+		}
+	</style>
+</head>
+<body>
+	<div id="container">超哥哥</div>
+	<div class="operate">
+		<button id="shake">shake</button>
+		<button id="fadeout">fadeout</button>
+	</div>
+	<script>
+		window.onload = function() {
+			var oContainer = document.getElementById('container')
+			var oShake = document.getElementById('shake');
+			var oFadeout = document.getElementById('fadeout');
+
+			oShake.addEventListener('click', handleClickShakeBtn);
+			oFadeout.addEventListener('click', handleClickFadeoutBtn);
+
+			function handleClickShakeBtn() {
+				shake(oContainer, function(){
+					alert('shake')
+				}, 200, 2000);
+			}
+
+			function handleClickFadeoutBtn() {
+				fadeout(oContainer, function(){
+					alert('fadeout');
+				}, 2000);
+			}
+
+			/**
+			 * shake 动画
+			 * @param  {DOM} e          动画对象
+			 * @param  {function} oncomplete 执行完成之后的回调
+			 * @param  {number} distence   初始化距离
+			 * @param  {number} time       初始化动画运行时间
+			 * @return {null}            nul
+			 */
+			function shake(e, oncomplete, distence, time) {
+				if (typeof e === 'string') {
+					e = document.getElementById(e);
+				}
+				var originStyle = e.style.cssText;
+				e.style.position = 'relative';
+				distence = distence || 5;
+				time = time || 500;
+				var start = new Date().getTime();
+				animate();
+				function animate() {
+					var now = new Date().getTime();
+					var proportion = (now - start)/time;
+					if (proportion < 1) {
+						var x = distence * Math.sin(proportion * Math.PI * 4);
+						e.style.left = x + 'px';
+						setTimeout(animate, Math.min(25, time - (now - start)));
+					} else {
+						e.style.cssText = originStyle;
+						oncomplete && oncomplete();
+					}
+				}
+			}
+
+			/**
+			 * fadeout 淡出动画
+			 * @param  {object} e          动画DOM对象
+			 * @param  {function} oncomplete 执行动画完成之后的回调	
+			 * @param  {number} time       动画执行时间
+			 * @return {[type]}            [description]
+			 */
+			function fadeout(e, oncomplete, time) {
+				if (typeof e === 'string') {
+					e = document.getElementById(e);
+				}
+				time = time || 500;
+				var ease = Math.sqrt;
+				var start = new Date().getTime();
+				animate();
+				function animate() {
+					var elapsed = new Date().getTime() - start;
+					var fraction = elapsed/time;
+					if (fraction < 1) {
+						var opacity = 1 - ease(fraction);
+						e.style.opacity = String(opacity);
+						setTimeout(animate, Math.min(25, time - elapsed)) // 调度下一帧
+					} else {
+						e.style.opacity = "0";
+						oncomplete && oncomplete();
+					}
+				}
+			}
+		}
+
+		
+	</script>
+</body>
+</html>

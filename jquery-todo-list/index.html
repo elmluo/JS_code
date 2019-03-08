@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>todo</title>
+	<script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.js"></script>
+	<script src="https://cdn.bootcss.com/lodash.js/4.17.10/lodash.js"></script>
+	<script type="text/javascript" src='js/base.js'></script>
+	<link rel="stylesheet" type="text/css" href="css/base.css">
+	<link href="https://cdn.bootcss.com/normalize/8.0.0/normalize.css" rel="stylesheet">
+</head>
+<body>
+	<div class="container"><!-- 容器 -->
+		<h1 class="title">To to list</h1>
+		<div class="add-task"><!-- 添加任务 -->
+			<input type="text" name="">
+			<button type="submit">submit</button>
+		</div>
+		<div class="task-list"><!-- 任务列表 -->
+			<!-- (.task-item>(span>input[type=checkbox])+(span.task-content{item content $})+(span{delete}))*10 -->
+			<div class="task-item">
+				<span><input type="checkbox"></span>
+				<span class="task-content">item content 1</span>
+				<span>delete</span>
+				<span>detail</span>
+			</div>
+			<div class="task-item">
+				<span><input type="checkbox"></span>
+				<span class="task-content">item content 2</span>
+				<span>delete</span>
+				<span>detail</span>
+			</div>
+			<div class="task-item">
+				<span><input type="checkbox"></span>
+				<span class="task-content">item content 3</span>
+				<span>delete</span>
+				<span>detail</span>
+			</div>
+			<div class="task-item">
+				<span><input type="checkbox"></span>
+				<span class="task-content">item content 4</span>
+				<span>delete</span>
+				<span>detail</span>
+			</div>
+			<div class="task-item">
+				<span><input type="checkbox"></span>
+				<span class="task-content">item content 5</span>
+				<span>delete</span>
+				<span>detail</span>
+			</div>
+			<div class="task-item">
+				<span><input type="checkbox"></span>
+				<span class="task-content">item content 6</span>
+				<span>delete</span>
+				<span>detail</span>
+			</div>
+			<div class="task-item">
+				<span><input type="checkbox"></span>
+				<span class="task-content">item content 7</span>
+				<span>delete</span>
+				<span>detail</span>
+			</div>
+			<div class="task-item">
+				<span><input type="checkbox"></span>
+				<span class="task-content">item content 8</span>
+				<span>delete</span>
+				<span>detail</span>
+			</div>
+			<div class="task-item">
+				<span><input type="checkbox"></span>
+				<span class="task-content">item content 9</span>
+				<span>delete</span>
+				<span>detail</span>
+			</div>
+			<div class="task-item">
+				<span><input type="checkbox"></span>
+				<span class="task-content">item content 10</span>
+				<span>delete</span>
+				<span>detail</span>
+			</div>
+		</div>
+		<div class="detail"><!-- 任务详情 -->
+			<div class="content">
+				
+			</div>
+			<div>
+				<div class="desc"></div>
+			</div>
+			<div class="remind">
+				<input type="date">
+				<button tyoe='submit'>submit</button>
+			</div>
+		</div>
+	</div>
+</body>
+</html>

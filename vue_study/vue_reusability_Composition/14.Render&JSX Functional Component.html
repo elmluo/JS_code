@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>函数式组件</title>
+    <script src="vue.js"></script>
+</head>
+<body>
+    <div>
+        <ul>
+            <li>在组件中标记functional: ture，意味着它无状态（没有data），无事例（没有this）</li>
+            <li>2.30之前的版本中，如果一个函数式组件想要接受props选项，所有组件上的属性都会自动解析为props</li>
+            <li>2.30以上的版本中，你可以省略props选项，所有租金按上的属性都会被自动解析为props</li>
+            <li>
+                <div>在2.5.0以及以上的版本中，如果你使用了单文件组件，那么基于模板的函数式声明租价可以这样声明</div>
+                <textarea name="" id="" cols="30" rows="3"><template functional></template></textarea>
+                <br>
+                <div><b>组件需要的一切都是通过上下文context传递的，包括：</b></div>
+                <ul>
+                    <li><b>context.props:</b>提供props的对象</li>
+                    <li><b>context.children:</b>VNode子节点的数组</li>
+                    <li><b>context.slots:</b>slots对象</li>
+                    <li><b>context.parent:</b>对父组件的引用</li>
+                    <li><b>context.listenners:</b>（2.3.0+）一个包含了组件上所注册v-on侦听器的对象，只有一个指向data.on的别名 </li>
+                    <li><b>context.injections: (2.3.0+) 如果使用了inject选项，则该对象包含了应当被注入的属性</b></li>
+                    <li>在添加functional: true 之后，锚点标题组件的render函数之前简单的增加context参数，this.$slots.default更新为context.children，之后this.level更新为context.props.level</li>
+
+                    <li>优点：因为函数式组件只有一个函数，所有渲染的开也低很多。</li>
+                    <li>缺点：对持久化实例的缺乏也就意味着函数式组件不会出现在Vue devtools的组件里</li>
+                    <li>优点：在作为包装组件时，他们同样非常有用，比如，当你需要，程序化的在多个组件中选择一个；在将children,props,data传递给子组件之前操作他们</li>
+                </ul>
+            </li>
+        </ul>
+
+        <div id="demo">
+            <smart-list :items="[1,2,3]"></smart-list>
+        </div>
+    </div>
+    
+    <script>
+        var EmptyList = {/**/}
+        var TableList = {/**/}
+        var OrderedList = {/**/}
+        var UnorderedList = {/**/}
+
+        Vue.component('smart-list', {
+            functional: true,
+            render: function (createElement, context) {
+              function appropriateListComponent () {
+                var items = context.props.items
+                if (items.length === 0)           return EmptyList
+                if (typeof items[0] === 'object') return TableList
+                if (context.props.isOrdered)      return OrderedList
+                return UnorderedList
+              }
+          
+              return createElement(
+                appropriateListComponent(),
+                context.data,
+                context.children
+              )
+            },
+            props: {
+              items: {
+                type: Array,
+                required: true
+              },
+              isOrdered: Boolean
+            }
+        })
+
+        new Vue({
+            el: '#demo'
+        })
+    </script>
+</body>
+</html>

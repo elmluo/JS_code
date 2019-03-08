@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>
+	15.10.4 可编辑的内容
+	</title>
+</head>
+<body>
+	<div id="editor" contenteditable spellcheck = false>
+		Click to edit
+	</div>
+	<iframe src="about:black" id="editorIframe" frameborder="0"></iframe>
+
+	<script>
+		/**
+		 * contenteditable:
+		 * 	支持拼写自动检查
+		 * spellcheck=false, 显示的关闭自动检查
+		 */
+		
+		/**
+		 * Document对象的designMode 属性设置为字符串"on"使得整个文档可编辑。
+		 * 设置off将恢复为只读文档
+		 * designMode属性并没有对应的HTML属性。以下代码通过
+		 */
+		window.onload = function() {
+			var editorIframe = document.getElementById('editorIframe');
+			editorIframe.contentDocument.designMode = "on";
+		};
+	</script>
+</body>
+</html>

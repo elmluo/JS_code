@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>vuexDemo</title>
+	<script src="vue.js"></script>
+	<script src="vuex.js"></script>
+</head>
+<body>
+
+	<h1>简单Store案例</h1>
+	<div class="app">
+	</div>
+
+
+
+	<script>
+
+		/**
+		 **************** State ******************
+		 *	1. 单一状态树
+		 *		每一个应用仅仅包含一个store
+		 *		
+		 *
+		 * 
+		 * 	2.组件中获取vuex状态
+		 * 		computed中返回某个状态, 通过根组件store注入状态机。
+		 * 		所有子组件都可以通过this.$store.state.XXX,获取状态
+		 * 		this.$store.commmit('addCount')  触发监听状态。
+		 *
+		 *
+		 * 
+		 *  3.mapState 辅助函数
+		 *  	一个组件需要多个状态，这些状态都为计算属性的话，重复和冗余
+		 *  	使用mapState辅助函数，帮助生成计算属性
+		 *
+		 *
+		 * 
+		 *	4.对象展开运算符 
+		 *		mapState辅助函数， 返回的是一个对象， 通过解构，直接复制给
+		 *
+		 *	5.组件仍然保有局部状态
+		 * 
+		 * computed: {
+		 * 		localComputed() {
+		 * 			//......
+		 * 		},
+		 * 		...mapState({
+		 * 			//.....
+		 * 		})
+		 * }
+		 *
+		 * 
+		 */
+
+
+
+		Vue.use(Vuex)
+
+
+
+
+
+		// 定义store状态管理
+		let demoStore = new Vuex.Store({
+			// 状态机
+			state: {
+				count: 0
+			},
+
+			// 类似于react中的监听状态改变nutations
+			mutations: {	
+				addCount: state => state.count++,
+				decreCount: state => state.count--,
+			}
+		})
+
+
+
+
+		// 自定义组件
+		Vue.component('counter', {
+			template: '\
+			    <div>\
+			    	<p>{{ getCount }}</span>\
+			    	<p>{{ getCountAlias }}</p>\
+			    	<p>{{ getCountPlusLocalState }}</p>\
+					<button v-on:click="increment">+</button>\
+					<button v-on:click="decrement">-</button>\
+			    </div>\
+			',
+
+			data: function() {
+				return{
+					localCount: 100,
+				}
+			},
+			
+		 // computed: {
+			// 	getCount() {
+			// 		return this.$store.state.count
+			// 	}
+			// },
+
+
+			// 利用mapState辅助函数，简化多个计算属性
+			// 在mapState中他可以自动获取state
+			// 使用对象展开运算符将此对象混入到外部对象中
+			computed: Vuex.mapState({
+				getCount: state => state.count, 
+				getCountPlusLocalState: function(state) {
+					return state.count + this.localCount
+				}
+			}),
+
+			methods: {
+				increment: function() {
+					this.$store.commit('addCount');	// 触发状态的改变
+				},
+				decrement: function() {
+					this.$store.commit('decreCount');
+				}
+			}
+		})
+
+
+
+
+		/**
+		 * 根组件
+		 */
+		var rootVm = new Vue({
+			el: '.app',
+			
+			// 把 store 对象提供给 “store” 跟组件的选项，这可以把 store 的实例注入所有的子组件
+			// 且子组件能通过 this.$store 访问到。
+  			store: demoStore,
+
+  			template: '\
+				<div class="app">\
+			      <counter></counter>\
+			    </div>\
+			'
+		})
+
+
+		
+	</script>
+</body>
+</html>

@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>文档坐标和视口坐标</title>
+</head>
+<body>
+	<div class="container"></div>
+	<script>
+		// 视口： 实际显示文档内容的浏览器的一部分；不包括浏览器的“外壳”
+		
+		/**
+		 * 以一个对象x和y属性的方式返回滚动条偏移量
+		 * @param  {[type]} w [description]
+		 * @return {[type]}   [description]
+		 */
+		function getScrollOffsets(w) {
+			// 使用定义的窗口，如果不带参数，则使用当前窗口
+			w = w || window;
+
+			// 除了IE8以及更早的版本以外，其他的浏览器都能用
+			if (w.pageXOffset != null) return {x: w.pageXOffset, y: w.pageYOffset};
+
+			// 标准浏览器
+			var d = w.document;
+			if (document.compatMode == "CSS1Compat") {
+				return {x: d.documentElement.scrollLeft, y: d.documentElement.scrollTop};
+			}
+			return {x: d.body.scrollLeft, y: d.body.scrollTop};
+		}
+		var scrollOffsets = getScrollOffsets();
+		console.log(scrollOffsets);
+		var containerDom = document.querySelector('.container');
+		// var spanDom = document.createElement('span');
+		// spanDom.innerText = scrollOffsets.x + ',' + scrollOffsets.y
+		// containerDom.innerHTML = "<span style='background: yellow'>"  + "123456" + "</span>";
+		var arrLiDom = new Array(100).join('<li>123456789</li>');
+		var resultHTML = '<ul>' + arrLiDom + '</ul>';
+		containerDom.innerHTML = resultHTML;
+
+
+		/**
+		 * 查询窗口的视口尺寸
+		 */
+		function getViewPortSize(w) {
+			w = w || window;
+
+			// 通用浏览器
+			if (w.innerWidth != null) return {w: w.innerWidth, h:w.innerHeight};
+			var d = w.document;
+
+			// IE8以下跟早的版本。
+			if (document.compatMode == 'CSS1Compat')
+				return {w: d.documentElement.clientWidth, h: d.documentElement.clientHeight};
+			return {w: d.body.clientWidth, h: d.body.clientWidth};
+		}
+		var result = getViewPortSize();
+		console.log("窗口的视口尺寸：", result)
+
+
+
+	</script>
+</body>
+</html>

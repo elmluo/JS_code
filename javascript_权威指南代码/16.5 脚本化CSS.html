@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>脚本化CSS</title>
+	<style>
+		.class1{
+			padding: 10px;
+			color: yellow;
+		}
+		.class2{
+			background: red;
+		}
+		.class3{
+			border: 1px solid black;
+		}
+	</style>
+</head>
+<body>
+	<div class="container class1">
+		chaogege is so cool
+	</div>
+	<script>
+		oContainer = document.querySelector('.container');
+		oContainer.classList.add('class2', 'class3')
+		isContainClass1 = oContainer.classList.contains('class1');
+		console.log(isContainClass1);
+		oContainer.classList.remove('class1');
+	</script>
+</body>
+</html>

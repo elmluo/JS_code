@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>JSX</title>
+    <script src="vue.js"></script>
+</head>
+<body>
+    <div>
+        <span>
+            将 h 作为 createElement 的别名是 Vue 生态系统中的一个通用惯例
+        </span>
+        <br>
+        <span>
+            实际上也是 JSX 所要求的，如果在作用域中 h 失去作用，在应用中会触发报错。
+        </span>
+        <br>
+        <div id="demo">
+            
+        </div>
+    </div>
+    <script>
+        
+
+        new Vue({
+            el: '#demo',
+            render(h) {
+                return (
+                    <div>
+                       <div>
+                            <span>666666</span>
+                        </div>     
+                    </div>
+                ) 
+            }
+        })
+    </script>
+</body>
+</html>

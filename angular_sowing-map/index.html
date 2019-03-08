@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>轮播图效果</title>
+	<script src="https://cdn.bootcss.com/angular.js/1.2.17/angular.js"></script>
+	<style type="text/css">
+		body{
+			background: pink;
+		}
+		.sowing-wrapper{
+			margin: 0 auto;
+			width: 500px;
+		}
+		.sowing-top{
+			width: 500px;
+			height: 500px;
+			overflow: hidden
+		}
+
+		.img-pennel {
+			width: 500px;
+			height: 500px;
+		}
+		.sowing-bottom {
+			display: flex;
+			height: 110px;
+		}
+		.img-nav-wrapper{
+			margin: 13px 20px;
+			display: inline-block;
+			width: 420px;
+			overflow: hidden;
+			position: relative;
+		}
+		.img-bar {
+			position: absolute;
+			display: inline-block;
+			left: 0px;
+			/*width: 1000px;*/
+		}
+		.img-item {
+			margin-right: 20px;
+			width: 80px;
+			height: 80px;
+			cursor: pointer;
+		}
+		.img-btn {
+			cursor: pointer;
+			user-select: none;
+			display: inline-block;
+			width: 42px;;
+			height:110px;
+			line-height: 110px;
+			background:rgba(0,0,0,0.3);
+			color: blue;
+			text-align: center;
+		}
+		.isActive {
+			border: 1px solid rgba(0,177,255,1);
+    		box-shadow: 0 0 5px rgba(0,177,255,1);
+		}
+	</style>
+</head>
+<body>
+	<div ng-app="app" class="container">
+
+		<div ng-controller="demoController">
+			
+			<sowing-map img-list="imgList" cur-index="curIndex">
+				<h3 ng-bind="name"></h3>
+			</sowing-map>
+		</div>
+
+	</div>
+
+	<script type="text/javascript">
+		// 全局注入app
+		var app = angular.module('app', []);
+
+		// 控制器
+		app.controller('demoController', ['$scope', function($scope){
+			$scope.name = "轮播图效果";
+			$scope.curIndex = 3;
+			$scope.imgList = [
+		      'img/01.jpg',
+		      'img/02.jpg',
+		      'img/03.jpg',
+		      'img/04.jpg',
+		      'img/05.jpg',
+		      'img/06.jpg',
+		      'img/07.jpg',
+		      'img/08.jpg',
+		      'img/09.jpg',
+			]
+		}])
+
+		// 指令
+		app.directive('sowingMap', ['$compile', function($compile){
+			// Runs during compile
+			return {
+				// name: '',
+				// priority: 1,
+				// terminal: true,
+				scope: {
+					curIndex: '=curIndex',
+					imgList: '=imgList'
+				}, // {} = isolate, true = child, false/undefined = no change
+				// controller: function($scope, $element, $attrs, $transclude) {},
+				// require: 'ngModel', // Array = multiple requires, ? = optional, ^ = check parent elements
+				restrict: 'AE', // E = Element, A = Attribute, C = Class, M = Comment
+				template: '<div class="sowing-wrapper">'+
+					'<h2></h2>'+
+					'<div class="sowing-top">'+
+						'<img class="img-pennel" ng-repeat="v in imgList track by $index" ng-show="$index === curIndex" ng-src="{{v}}">'+
+					'</div>'+
+					'<div class="sowing-bottom">'+
+						'<div class="img-btn" ng-click="goLeft()"><</div>'+
+						'<div class="img-nav-wrapper">'+
+							'<div class="img-bar">'+
+								'<img class="img-item" ng-repeat="v in imgList track by $index" ng-src="{{v}}" ng-click="selectImg($index)" ng-class="{isActive : $index === curIndex }"/>'+
+							'</div>'+
+						'</div>'+
+						'<div class="img-btn" ng-click="goRight()">></div>'+
+					'</div>'+
+					'<div></div>'+
+				'</div>',
+				// templateUrl: '',
+				replace: true,
+				transclude: true,
+				// compile: function(tElement, tAttrs, function transclude(function(scope, cloneLinkingFn){ return function linking(scope, elm, attrs){}})),
+				link: function($scope, iElm, iAttrs, controller) {
+					$scope.curIndex = $scope.curIndex || 0;
+					var oImgBar = iElm[0].querySelector('.img-bar');
+					var imgCounts = $scope.imgList.length;  // 图片数量
+					var eachLen = (80 + 20);
+					oImgBar.style.width = eachLen * imgCounts + 2 + 'px';	// img-bar的长度 = （所有照片的长度 + marginleft） + 选中阴影效果的border
+					var left = 0;
+
+					// 点击小图片					
+					$scope.selectImg = function(idx) {
+						$scope.curIndex = idx;
+					}
+					// 向左显示
+					$scope.goLeft = function() {
+						while($scope.curIndex <= 0) return;
+						$scope.curIndex--;
+						moveRight();
+					}
+					// 向右显示
+					$scope.goRight = function() {
+						while($scope.curIndex >= imgCounts -1) return;
+						$scope.curIndex++
+						moveLeft();
+					}
+
+					// img-bar向左移动
+					function moveLeft() {
+						if($scope.curIndex > left + 3 ) {
+							oImgBar.style.left =  oImgBar.offsetLeft - eachLen + 'px';
+							left ++;
+						};
+					}
+
+					// img-bar向右移动
+					function moveRight() {
+						imgCounts;
+						if ($scope.curIndex < left) {
+							oImgBar.style.left =  oImgBar.offsetLeft + eachLen + 'px'
+							left --;
+						}
+					}
+				}
+			};
+		}]);
+
+	</script>
+</body>
+</html>

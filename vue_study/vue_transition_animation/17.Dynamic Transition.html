@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>动态过渡</title>
+    <script src="vue.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/velocity/1.2.3/velocity.min.js"></script>
+
+</head>
+<body>
+    <div id="dynamic-fade-demo" class="demo">
+        Fade in: <input type="range" v-model="fadeInDuration" :min="0" :max="maxFadeDuration">
+        Fade out: <input type="range" v-model="fadeOutDuration" :min="0" :max="maxFadeDuration">
+
+        <transition :css="false"
+            @before-enter="beforeEnter"
+            @enter="enter"
+            @leave="leave"
+        >
+            <p v-if="show">help help help help !!!!!!</p>
+        </transition>
+
+        <button v-if="stop" @click="stop=false; show=false">Start animating   </button>
+        <button v-else @click="stop=true">stop it</button>
+    </div>
+
+    <script>
+        new Vue({
+            el: '#animated-number-demo',
+            data: {
+              number: 0,
+              animatedNumber: 0
+            },
+            watch: {
+              number: function(newValue, oldValue) {
+                var vm = this
+
+                function animate () {
+                  if (TWEEN.update()) {
+                    requestAnimationFrame(animate)
+                  }
+                }
+          
+                new TWEEN.Tween({ tweeningNumber: oldValue })
+                  .easing(TWEEN.Easing.Quadratic.Out)
+                  .to({ tweeningNumber: newValue }, 500)
+                  .onUpdate(function () {
+                    vm.animatedNumber = this.tweeningNumber.toFixed(0)
+                  })
+                  .start()
+          
+                animate()
+              }
+            }
+          })
+    </script>
+</body>
+</html>

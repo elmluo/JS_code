@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>单元素/组件过度</title>
+    <style>
+        .fade-enter-active, .fade-leave-active {
+            transition: opacity .5s;
+        }
+        .fade-enter, .fade-leave-to{
+            opacity: 0;
+        }
+    </style>
+    <script src="vue.js"></script>
+</head>
+<body>
+    <div id="demo">
+        <button v-on:click="change">
+            Toggle
+        </button>
+        <transition name="fade">-
+            <p v-if="show">hello</p>
+        </transition>
+    </div>
+
+   
+
+
+    <script>
+        new Vue({
+            el: '#demo',
+            data: {
+                show: true
+            },
+            methods: {
+                change($event) {
+                    this.show = !this.show;
+                    console.log(this.show);
+                    console.log($event);
+                }
+            }
+        })
+    </script>
+</body>
+</html>

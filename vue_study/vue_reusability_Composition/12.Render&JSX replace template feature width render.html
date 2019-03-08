@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>用render函数代替模板</title>
+    <script src="vue.js"></script>
+</head>
+<body>
+    <div>
+        <span>
+            Vue推荐在绝大多数情况下使用template来创建你的HTML。
+           
+        </span>
+        <br>
+        <span>
+                然而在一些场景中，你真的需要javascript完全的编程能力
+        </span>
+        <br>
+
+        <div id="root">  
+
+            <anchored-heading :level="2">Hello world!</anchored-heading>
+
+            <v-for-demo :items = 'items'></v-for-demo>
+
+            <v-model-demo :value="value" @input="getChildMsg"></v-model-demo>    
+            <div>{{value}}</div>
+
+            <v-slot-demo> 这个是this.$slots.default </v-slot-demo>
+
+            <v-scoped-slots :message="message"> 这个是this.$scopedSlots.default</v-scoped-slots>
+        </div>
+    </div>
+
+    <script>
+        // 递归获取子孙节点内容
+        var getChildrenTextContent = function (children) {
+            return children.map(function (node) {
+                return node.children? getChildrenTextContent(node.children): node.text
+            }).join('')
+        }
+      
+        Vue.component('anchored-heading', {
+            render: function (createElement) {
+                console.log(this.$slots.default);
+                // create kebabCase id
+                var headingId = getChildrenTextContent(this.$slots.default)
+                .toLowerCase()
+                .replace(/\W+/g, '-')
+                .replace(/(^\-|\-$)/g, '')
+            
+                return createElement(
+
+                    'h' + this.level,
+
+                    {
+                        attrs: {
+
+                        }
+                    },
+
+                    [
+                        createElement('a', {
+                            attrs: {
+                                name: headingId,
+                                href: '#' + headingId
+                            }
+                        }, this.$slots.default)
+                    ]
+                )
+            },
+            props: {
+                level: {
+                    type: Number,
+                    required: true
+                }
+            }
+        })
+
+        // 模仿v-for的api
+        Vue.component('v-for-demo', {
+            props: ['items'],
+            render(createElement) {
+                if (this.items.length) {
+                   return createElement('ul', this.items.map(function(item){
+                       return createElement('li', item.name)
+                   }))
+                } else {
+                    return createElement('p', 'no items found')
+                }
+            }
+        })
+
+        // 模仿v-model的api,这里利用了父子组件直线的信息传递
+        Vue.component('v-model-demo', {
+            props: ['value'],
+            render(createElement) {
+                var self = this;
+                return createElement('input',{
+                    domProps: {
+                        value: self.value
+                    },
+                    on: {
+                        input(event) {
+                            self.$emit('input', event.target.value);
+                        }
+                    }
+                })
+            },
+        })
+
+        // 插槽this.$slots.default
+        // 你可以从 this.$slots 获取 VNodes 列表中的静态内容：
+        Vue.component('v-slot-demo', {
+            render(createElement) {
+                // console.log(this.$slots.default);
+                return createElement('div', this.$slots.default)
+            }
+        })
+
+        // 作用域插槽
+        // 如果要用渲染函数向子组件中传递作用域插槽，
+        // 可以利用 VNode 数据中的 scopedSlots 域：
+        // 如果要用渲染函数向子组件中传递作用域插槽，可以利用 VNode 数据中的 scopedSlots 域：
+        Vue.component('v-scoped-slots', {
+            props: ['message'],
+            render: function (createElement) {
+            return createElement('div', [
+                createElement('child', {
+                    // pass `scopedSlots` in the data object
+                    // in the form of { name: props => VNode | Array<VNode> }
+                    scopedSlots: {
+                        default: function (props) {
+                            return createElement('span', props.text)
+                        }
+                    }
+                    })
+                ])
+            }
+        })
+        
+        new Vue({
+            el: '#root',
+            data() {
+                return{
+                    items: [
+                        {
+                            name: 11
+                        },{
+                            name: 22
+                        },{
+                            name: 33
+                        },{
+                            name: 44
+                        },{
+                            name: 55
+                        },{
+                            name: 66
+                        },{
+                            name: 77
+                        },
+                    ],
+                    value: '2333',
+                    message: '小九九'
+                }
+            },
+            methods: {
+                getChildMsg(msg) {
+                    this.value = msg;
+                }
+            }
+        })
+    </script>
+</body>
+</html>

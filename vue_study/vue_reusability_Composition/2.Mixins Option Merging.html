@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>mixin-选项合并</title>
+    <script src="vue.js"></script>
+</head>
+<body>
+    <div>
+        <span>如果组件和混入对象含有相同的选项时，这些选项将以恰当的方式混合</span>
+        <br>
+        <span>比如，数据对象在内部会进行合并（一层属性深度）</span>
+        <br>
+        <span>发生冲突的时候，以组件优先</span>
+        <br>
+    </div>
+
+    <script>
+        var myMixin = {
+            data() {
+                return {
+                    message: 'hello',
+                    foo: 'abc'
+                }
+            }
+        }
+
+        new Vue({
+            mixins: [myMixin],
+            data() {
+                return {
+                    message: 'goodBye', // 混合重复，组件优先
+                    bar: 'def'
+                }
+            },
+            created() {
+                console.log(this.$data);
+            }
+        })
+    </script>
+</body>
+</html>

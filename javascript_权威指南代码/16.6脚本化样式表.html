@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>脚本化样式表</title>
+	<style id="style1">
+		.container{
+			padding: 10px;
+			color: yellow;
+		}
+		.container h2 {
+			font-size: 44px;
+		}
+	</style>
+	<style id="style2">
+		.container{
+			color: red;
+			background: pink;
+		}
+	</style>
+</head>
+<body>
+	<div class="container">
+		<h2>
+			chaogege is so cool
+		</h2>
+	</div>
+	<script>
+		document.styleSheets['style1'].disabled = true;
+		document.styleSheets['style2'].disabled = true;
+		for (var i = 0; i < document.styleSheets.length; i++) {
+			document.styleSheets[i].disabled = false;
+		}
+		// cssRules[] 伪数组
+		document.styleSheets['style2'].cssRules[0].cssText;
+		document.styleSheets['style2'].cssRules.item(2);
+		document.styleSheets['style1'].insertRule('h2{background: blue}', 0)
+	</script>
+</body>
+</html>

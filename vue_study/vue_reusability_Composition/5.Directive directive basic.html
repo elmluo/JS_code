@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>指令简介</title>
+    <script src="vue.js"></script>
+</head>
+<body>
+    <div>   
+        <span>
+            除了核心功能默认内置指令（v-model和v-show),vue也允许注册自定义指令。注意，在<Vue2 class="0">zho</Vue2>
+        </span>
+        <br>
+        <span>
+            注意，在Vue2.0中,代码复用和抽象的主要形式是组件。 
+        </span>
+        <br>
+        <span>
+            然而，有的情况下，你任然需要对普通DOM元素进行底层操作，这个时候就会用到自定义指令
+        </span>
+
+        <div id='root'>
+            <input type="text" v-focus>
+        </div>
+    </div>
+
+    <script>
+        console.log(Vue.directive)
+        // 注册一个全局的指令v-focus
+        Vue.directive('focus', {
+            // 当被绑定的元素插入DOM中时候
+            inserted: function(el) {
+                // 聚焦元素
+                el.focus();
+                console.log(el, 123456)
+            }
+        })
+
+
+        new Vue({
+            el: '#root'
+        })
+    </script>
+</body>
+</html>

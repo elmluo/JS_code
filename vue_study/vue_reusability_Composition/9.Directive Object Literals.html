@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>对象字面量</title>
+    <script src="vue.js"></script>
+</head>
+<body>
+    <div>   
+        <span>  如果指令需要多个值，可以传入一个javascript对象字面量。记住，指令函数能够接受所有合法的javascript表达式</span>
+        <div id="demo" v-demo="{color: 'white', text: 'hello!'}">
+        </div>
+    </div>
+    <script>
+        Vue.directive('demo', function(el, binding) {
+            console.log(binding);
+            console.log(binding.value.color);
+            console.log(binding.value.text);
+        })
+
+        new Vue({
+            el: '#demo',
+        })
+    </script>
+</body>
+</html>

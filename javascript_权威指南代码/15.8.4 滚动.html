@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>滚动</title>
+	<style>
+		body{
+			background: yellow;
+			margin: 100px; 
+			height: 1000px; 
+			border: 30px solid #093; 
+		}
+		.container{
+			position: fixed;
+			width: 100px;
+			right: 0;
+			background: red;
+		}
+		button {
+			cursor: pointer;
+		}
+	</style>
+</head>
+<body>
+
+
+	<div class="container">
+		<div class="go-top">
+			<button onclick='scrollToTop();'>到顶部</button>
+		</div>
+		<div class="scroll-interval-top">
+			<button onclick="scrollTopInterval();">向上滚动</button>
+		</div>
+		<div class="scroll-interval-bottom">
+			<button onclick="scrollBottomInterval();">向下自动滚动</button>
+		</div>
+		<div class="go-bottom">
+			<button onclick="scrollToBottom()">到底部</button>
+		</div>
+	</div>
+	
+
+	<script>
+		var documentHeight = document.documentElement.offsetHeight;	// 获取文档视口高度
+		var viewportHeight = window.innerHeight;	// 获取视口高度
+		var timerTop, timerBottom;
+
+		/*
+		滚动到底部
+		*/
+		function scrollToBottom() {
+			disposeAllInterval();
+			window.scrollTo(0, documentHeight - viewportHeight);	// 滚动的高度；
+		}
+
+		/*
+		回到顶部
+		*/
+		function scrollToTop() {
+			disposeAllInterval();
+			// window.scrollTo(0, 0)
+			window.document.documentElement.scrollIntoView();
+		}
+
+		/*
+		向上定时滚动
+		*/
+		function scrollTopInterval() {
+			clearInterval(timerTop);   // 先清除自己的定时器
+			timerBottom && clearInterval(timerBottom)  // 清除向下的定时器
+			timerTop = setInterval(function() {
+				window.scrollBy(0, -5)
+			}, 20)
+		}
+
+		/*
+		向下滚动
+		*/
+		function scrollBottomInterval() {
+			clearInterval(timerBottom);  // 先清除自己的定时器
+			timerTop && clearInterval(timerTop)  // 清除向上的定时器
+			timerBottom = setInterval(function() {
+				window.scrollBy(0, 5)
+			}, 20)
+		}
+
+		/*
+		清除所有定时器
+		*/
+		function disposeAllInterval() {
+			clearInterval(timerTop)
+			clearInterval(timerBottom);
+		}
+		
+	</script>
+</body>
+</html>

@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>事件捕获</title>
+</head>
+<body>
+	<div class="grandParent">
+		爷爷
+		<div class="parent">
+			爹
+			<div class="child1" style="position: absolute; right: 0">
+				儿子1
+			</div>
+			<div class="child2" style="position: absolute; right: 0">
+				儿子2
+			</div>
+		</div>
+	</div>
+	
+	<script>
+		// 通过冒泡的顺序（里——>外）儿子、爹、爷爷
+		// 安排上一步的顺序，遍历监听，如果该listener为true，则将该listenr放到队列首位。
+		window.onload = function() {
+			oGp = document.querySelector('.grandParent');
+			oParent = document.querySelector('.parent');
+			oChild1 = document.querySelector('.child1');
+			oChild2 = document.querySelector('.child2');
+			oGp.addEventListener('mousedown', function(e) {
+				console.log('爷爷');
+				e.stopPropagation();
+			}, false);
+			oParent.addEventListener('mousedown', function() {
+				console.log('爹f')
+			}, false);
+			oParent.addEventListener('mousedown', function() {
+				console.log('爹t')
+			}, true);
+			oChild1.addEventListener('mousedown', function() {
+				console.log('儿子1')
+			}, true);
+			oChild2.addEventListener('mousedown', function() {
+				console.log('儿子2')
+			}, true);
+		}
+	</script>
+</body>
+</html>

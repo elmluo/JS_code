@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <style>
+        .custom-appear-class{
+            opacity: 0;
+            background: red;
+        }
+        .custom-appear-active-class{
+            transition: all 2s
+        }
+        .custom-appear-to{
+            opacity: 0;
+            background: yellow;
+        }
+    </style>
+    <title>过渡的初始化</title>
+    <script src="vue.js"></script>
+</head>
+<body>
+    <span>
+        可以通过appear特性设置节点在页面组件，初始化渲染的过渡
+    </span>
+    
+    <div id="demo">
+        <transition
+            appear
+            appear-class="custom-appear-class"
+            appear-to-class="custom-appear-to-class"
+            appear-active-class="custom-appear-active-class"
+        >
+            <p v-if="show">demo</p>
+        </transition>
+    </div>
+
+    <script>
+        new Vue({
+            el: '#demo',
+            data() {
+                return {
+                    show: true,
+                }
+            }
+        })
+    </script>
+</body>
+</html>

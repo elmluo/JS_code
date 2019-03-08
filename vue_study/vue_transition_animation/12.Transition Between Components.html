@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>多个组件过渡</title>
+    <style></style>
+    <script src="vue.js"></script>
+</head>
+<body>
+    <div>
+        <span></span>
+        <div id="transition-components-demo">
+            <!-- 多个元素的过渡 -->
+            <button @click="changeComponent">change-component</button>
+            <transition name="component-fade" mode="out-in">
+                <!-- 这里可以更具状态is组件 -->
+                <component v-bind:is="view"></component>
+            </transition>
+        </div>
+    </div>
+
+    <script>
+       new Vue({
+        el: '#transition-components-demo',
+        data() {
+          return {
+            view: 'v-a'
+          }
+        },
+        methods: {
+          changeComponent() {
+            if (this.view === "v-a") {
+              this.view = "v-b"
+            } else if (this.view === "v-b") {
+              this.view = "v-a"
+            }
+          },
+        }, 
+        components: {
+          'v-a': {
+            template: '<div>Component A</div>'
+          },
+          'v-b': {
+            template: '<div>Component B</div>'
+          }
+        }
+      })
+    </script>
+</body>
+</html>

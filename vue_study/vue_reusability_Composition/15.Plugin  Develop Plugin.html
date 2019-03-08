@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>开发插件</title>
+    <script src="vue.js"></script>
+
+</head>
+<body>
+    <div>
+        <ul>
+            <li>插件通常会为Vue添加全局功能。插件的范围没有限制,一般如下情况</li>
+            <li>-添加全局方法或者属性,如vue-custom-element</li>
+            <li>-添加全局资源： 指令/过滤器/过渡等，如vue-touch</li>
+            <li>-通过全局mixin方法添加一些组件选项，如vue-router</li>
+            <li>-添加Vue实例方法，通过把他们添加到Vue.prototype上实现</li>
+            <li>-一个库，提供自己的API,同时提供上面提到的一个或者多个功能，如vue-router</li>
+        </ul>
+        <div>Vue.js的插件应当有一个公开方法install。这个方法的第一个参数是Vue构造器，第二个参数是一个可选的选项对象</div>
+
+        <div id="#root">
+        </div>
+    </div>
+    <script>
+        MyPlugin.install = function (Vue, options) {
+            // 1. 添加全局方法或属性
+            Vue.myGlobalMethod = function () {
+                // 逻辑...
+                console.log(1);
+            }
+
+            // 2. 添加全局资源
+            Vue.directive('my-directive', {
+                bind (el, binding, vnode, oldVnode) {
+                    console.log(2);
+                }
+
+            })
+
+            // 3. 注入组件
+            Vue.mixin({
+                created: function () {
+                    // 逻辑...
+                    console.log(3);
+                }
+    
+            })
+
+            // 4. 添加实例方法
+            Vue.prototype.$myMethod = function (methodOptions) {
+                // 逻辑...
+                console.log(4);
+            }
+        }
+
+        new Vue({
+            el: '#root'
+        })
+    </script>    
+</body>
+</html>

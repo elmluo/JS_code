@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>js_scale</title>
+	<style>
+		html, body {
+			width: 100%;
+			height: 100%;
+		}
+		.block {
+			width: 100px;
+			height: 100px;
+			background: #ff00ff;
+			display: inline-block;
+		}
+	</style>
+</head>
+<body>
+	<div class="block"></div>
+	<script type="text/javascript">
+		var container = document.getElementsByClassName('block')[0];
+		container.style.position = 'relative';
+		scale(container);
+
+		function scale(dom) {
+			var block1 = document.createElement('div');
+			block1.className = 'block';
+			block1.style.position = "absolute";
+			block1.style.width = 10 + 'px';
+			block1.style.height = 10 + 'px';
+			block1.style.background = 'black';
+			block1.style.bottom = - 5  + 'px';
+			block1.style.right = - 5  + 'px';
+			block1.style.cursor = 'pointer';
+			container.appendChild(block1);
+			var posX = 0, posY = 0, oTop = 0, oLeft = 0, oWidth=0, oHeight=0;
+			block1.onmousedown = function(e) {
+				posX = e.clientX;
+				posY = e.clientY;
+				oTop = dom.style.top;
+				oLeft = dom.style.left;
+				oWidth = dom.offsetWidth;
+				oHeight = dom.offsetHeight;
+
+				document.onmousemove = function(e) {
+					dom.style.width = oWidth + (e.clientX - posX) + 'px';
+					dom.style.height = oHeight + (e.clientY - posY) + 'px';
+
+					document.onmouseup = function(e) {
+						document.onmousemove = null;
+						document.onmouseup = null;
+					}
+				}
+			};
+		}
+	</script>
+</body>
+</html>

@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>全局混入</title>
+</head>
+<body>
+    <div>
+        <span>请谨慎使用全局混入，因为会影响到每个单独创建的Vue事例（包含第三方模块）</span>
+        <br>
+        <span>大多数情况下，只有当应用自定义选项，就像上面的事例一样，也可以将其作plugin以避免重复</span>
+    </div>
+
+    <script>
+        Vue.mixin({
+            created() {
+                var myOption = this.$options.myOption
+                if (myOption) {
+                    console.log(myOption)
+                }
+            }
+        })
+
+
+
+        new Vue({
+            myOption: 'hello hello hello hello !!!!!!'
+        })
+    </script>
+</body>
+</html>

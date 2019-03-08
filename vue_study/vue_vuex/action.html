@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>vuex_action</title>
+	<script src="vue.js"></script>
+	<script src="vuex.js"></script>
+</head>
+<body>
+	<h1>Action类似mutation，不同在于
+		Action提交的mutation
+		Action可以包含任意异步操作
+	</h1>
+	<div id="app"></div>
+	<script>
+		/*
+		
+		 	(actions、store.dispatch触发) ---> (mutation、context.commit触发) -----> (state、getters)
+			action 通过 store.dispatch方法触发
+
+
+
+		 */
+		const store = new Vuex.Store({
+			state: {
+				count: 0,
+			},
+			mutations: {
+				increment(state, payLoad) {
+					state.count+=payLoad.amount
+				}
+			},	
+
+
+			/*
+			
+				-Action 函数接受一个与 store 实例具有相同方法和属性的 context 对象，
+
+				-因此你可以调用 context.commit 提交一个 mutation，或者通过 context.state 和 context.getters 来获取 state 和
+
+				-getters。当我们在之后介绍到 Modules 时，你就知道 context 对象为什么不是 store 实例本身了。
+
+				-actions内部可以执行异步操作, 对于状态有异步操作
+				 */
+			actions: {
+				
+				// increment(context) {
+				// 	context.commit('increment');
+				// },
+
+				// ES2015 的 参数解构 来简化代码（特别是我们需要调用 commit 很多次的时候）
+				incrementAsync ({state, commit}, payLoad) {
+					setInterval(()=> {
+						commit('increment', payLoad)
+					}, 1000)
+				}
+			}
+		})
+		rootVm = new Vue({
+			el: '#app',
+			store,
+			template: '\
+				<div class = "app">\
+					数量：{{count}}\
+				</div>\
+			',
+			data () {
+				return {
+
+				}
+			},
+			computed: {
+				...Vuex.mapState(["count"])
+			},
+			methods: {
+
+			},
+			created() {
+				// 以载荷的方式分发参数
+				// this.$store.dispatch('incrementAsync', {
+				// 	amount: 10
+				// });
+				// 以对象的方式分发参数
+				this.$store.dispatch({
+					type: 'incrementAsync',
+					amount: 10
+				})
+			}
+		})
+	</script>
+</body>
+</html>

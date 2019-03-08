@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>List Transitions</title>
+    <style>
+        #list-demo {
+            width: 800px;;
+        }
+        .list-item {
+            display: inline-block;
+            margin-right: 100px;
+        }
+
+
+        .list-enter-active, .list-leave-active {
+            transition: all 1s
+        }
+        .list-enter, .list-leave-to{
+            opacity: 0;
+            transform: translate(30px);
+        }
+    </style>
+    <script src="vue.js"></script>
+</head>
+<body>
+    <div>
+        <span>
+            同时渲染列表，要用到<transition-group>组件。在我们深入例子之前，先了解关于这个组件的几个特点：
+        </span>
+        <span>
+            不同与<transitio>它会以一个真实的元素呈现： 默认为一个<span>。你也可以通过tag特性更换为其他元素        
+        </span>
+        <span>
+            内部元素总是需要 提供唯一的 key 属性值得。
+        </span>
+        <br>
+
+        <div id="list-demo">
+            <button @click="add">add</button>
+            <button @click="remove">remove</button>
+            <!-- transition-group -->
+            <transition-group name="list" tag="p">
+                <span v-for="item in items" :key="item" class="list-item"> {{item}} </span>
+            </transition-group>
+        </div>
+    </div>
+
+
+    <script>
+        new Vue({
+            el: '#list-demo',
+            data() {
+                return {
+                    items: [1,2,3,4,5,6,7,8,9],
+                    nextNum: 10
+                }
+            },
+            methods: {
+                randomIndex: function () {
+                    return Math.floor(Math.random() * this.items.length)
+                },
+                add() {
+                    // 改变源对象
+                    this.items.splice(this.randomIndex(), 0, this.nextNum++);
+                },
+                remove() {
+                    this.items.splice(this.randomIndex(), 1)
+                }
+            }
+        }) 
+    </script>
+</body>
+</html>

@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>可复用的过渡</title>
+    <script src="vue.js"></script>
+</head>
+<body>
+    <div id="root">   
+        <span>过渡可以通过Vue的组件系统实现复用</span>
+        <br>
+        <span>要创建一个可复用的过渡组件，要讲transition/transition-group作为跟组件</span>
+        <br>
+        <span>然后将任何子组件放置即可</span>
+        <button @click=""></button>
+        <transition
+            name="very-special-transition"
+            mode="out-in"
+            >
+            <p>123456789</p>
+        </transition>
+
+
+        <my-special-transition>
+            <h1>helloWorld</h1>
+        </mmy-special-transition>
+
+    </div>
+
+
+    <script>
+        console.log(Vue.component);
+        Vue.component('my-special-transition', {
+            template: '\
+              <transition\
+                name="very-special-transition"\
+                mode="out-in"\
+                v-on:before-enter="beforeEnter"\
+                v-on:after-enter="afterEnter"\
+              >\
+                <slot></slot>\
+              </transition>\
+            ',
+            methods: {
+              beforeEnter: function (el) {
+                // ...
+                console.log(123)
+              },
+              afterEnter: function (el) {
+                // ...
+                console.log(123)
+                
+              }
+            }
+        })
+
+
+
+
+        new Vue({
+            el: "#root",
+            methods: {
+                beforeEnter: function (el) {
+                // ...
+                console.log(123)
+              },
+              afterEnter: function (el) {
+                // ...
+                console.log(123)
+                
+              }
+            }
+    
+        })
+     
+    </script>
+</body>
+</html>

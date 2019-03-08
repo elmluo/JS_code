@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>15.10.3窗口中获取选取的文本</title>
+</head>
+<body>
+	<div>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Excepturi optio maiores voluptatem doloremque laboriosam minus sint quam inventore tenetur quis officiis accusantium dolore veritatis sed quae, soluta, necessitatibus velit doloribus. Error saepe velit optio, minus nihil doloremque, id eligendi itaque. Perferendis aspernatur eveniet illo inventore, quia nostrum odio, voluptas voluptates nesciunt, praesentium atque debitis fuga a! Minus tempore id architecto placeat debitis suscipit autem est fugiat nihil. Similique omnis rem eligendi totam unde eos debitis incidunt distinctio tenetur quidem natus fugiat, blanditiis beatae quas impedit odio consectetur repellendus repellat consequuntur deleniti. Blanditiis delectus temporibus accusamus, minus veritatis at possimus voluptates!</div>
+	<script>
+		/**
+		 * 获取窗口中选中的文字
+		 * @return {[type]} [description]
+		 */
+		function getSelectedText() {
+			if(window.getSelection) {
+				return window.getSelection().toString();	// HTML标准的API，toString(). 方法获取选中的详细的文本。
+			} else if (document.selection) {	// ID
+				return document.selection.createRange().text;
+			}
+		}
+
+		document.addEventListener("mouseup", handleMouseup, true);
+
+		/**
+		 * 鼠标释放
+		 */
+		function handleMouseup(event) {
+			var text = getSelectedText();
+			text && console.log(text);
+		}
+		
+
+	</script>
+</body>
+</html>

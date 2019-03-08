@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>	使用DocumentFragment</title>
+</head>
+<body>
+	<div>
+		<div>	
+			<button onclick="handleClick();">reverse</button>
+		</div>
+		<ul>
+			<li>111</li>
+			<li>222</li>
+			<li>333</li>
+			<li>444</li>
+			<li>555</li>
+		</ul>
+	</div>
+	<script type="">
+		// DocumentFragment
+		// parentNode 为null
+		// 特殊之处在于它使得一组节点被当做一个节点看待
+		// appendChild()、insertBefore、replaceChild()传递一个DocumentFragment,其实是将该文档所有子节点插入到文档中，而非片段DocumentFragment()本身
+		// 当片段中的所有子节点插入到文档中，文档片段清空以便重用。
+		
+		var oUl = document.querySelector('ul');
+
+		/**
+		 * 倒序排列节点n的子节点
+		 * 		createDocumentFragment来解决。
+		 */
+		function reverse(node) {
+			var f = document.createDocumentFragment();
+			// 从后往前循环子节点，将每个子节点移动到fragment中。
+			// n的最后一个节点变成f的第一个节点，反之亦然。
+			// 注意，给f添加一个节点，该节点自动会从node中删除。
+			while(node.lastChild){
+				f.appendChild(node.lastChild);
+			};
+			// 最后，将f的所有子节点一次性全部移动回n中。
+			node.appendChild(f)
+		}
+		
+		function handleClick() {
+			reverse(oUl);
+		}
+
+
+		/**
+		 * 使用innerHTML实现insertAdjacentHTML();
+		 * 		这个模块为不支持它的浏览器定义了ELement.insertAdjacentHTML
+		 * 		还定义了一些可移植的HTML插入函数， 它们的名字比insertAdjacetHTML更符合逻辑;
+		 * 		Insert.before()、Insert.after()、Insert.atStart() 和Insert.atEnd();
+		 */
+		var Insert = (function(){
+			// if (document.createElement('div').insertAdjacentHTML) {
+			// 	return {
+			// 		before: function(e,h){e.insertAdjacentHTML('beforeBegin', h)},
+			// 		after: function(e,h){e.insertAdjacentHTML('afterEnd', h)},
+			// 		atStart: function(e,h){e.insertAdjacentHTML('afterBegin', h)},
+			// 		atEnd: function(e,h){e.insertAdjacentHTML('beforeEnd', h)},
+			// 	}
+			// }
+
+			// 否则，无原生的insertAdjacentHTML
+			// 实现同样的4个插入函数，并使用它们来定义insertAdjacentHTML
+			// 首先，定义一个工具函数，传入HTML字符串，返回一个DocumentFragment,
+			// 它包含了解析后的HTML的表示。
+			function fragment(html) {
+				var elt = document.createElement('div');
+				var frag = document.createDocumentFragment();
+				// innerHTML赋值，可以得到解析后的html元素。
+				elt.innerHTML = html;
+				while(elt.firstChild)
+					frag.appendChild(elt.firstChild);
+				return frag;
+			}
+			// 基于以上函数实现insertAdjacentHTML
+			var Insert = {
+				before: function(elt, html) {
+					elt.parentNode.insertBefore(fragment(html), elt)
+				},
+				after: function(elt, html) {
+					elt.parentNode.insertBefore(fragment(html), elt.nextSibling);
+				},
+				atStart: function(elt, html) {
+					elt.insertBefore(fragment(html), elt.firstChild);
+				},
+				atEnd: function(elt, html) {
+					elt.appendChild(fragment(html));
+				}
+			}
+
+			// Element.prototype.方法当中返回的this。指代的使用该防范的实例node。
+			Element.prototype.insertAdjacentHTML = function(pos, html) {
+				switch (pos.toLowerCase()) {
+					case 'beforebegin': return Insert.before(this, html);
+					case 'afterend': return Insert.after(this, html);
+					case 'afterbegin': return Insert.atStart(this, html);
+					case 'beforeend': return Insert.atEnd(this, html);
+				}
+			}
+			return Insert;
+		})()
+		
+
+		oUl.insertAdjacentHTML('beforeBegin', '<span style="background-color: red">外部的前面添加</span>');
+		oUl.insertAdjacentHTML('beforeEnd', '<span style="background-color: red">内部的后面添加</span>');
+		oUl.insertAdjacentHTML('afterBegin', '<span style="background-color: red">内部的前面添加</span>');
+		oUl.insertAdjacentHTML('afterEnd', '<span style="background-color: red">外部的后面添加</span>');
+
+	</script>
+</body>
+</html>

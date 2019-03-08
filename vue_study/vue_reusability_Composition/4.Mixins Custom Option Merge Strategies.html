@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>自定义选项合并策略</title>
+</head>
+<body>
+    <div>
+        <span>自定义选项将使用默认策略，即简单的覆盖已有值。</span>
+        <br>
+        <span>如果想要让自定义选项以自定义的逻辑合并，可以向Vue.config.optionMergeStrategies添加一个函数</span>
+
+        <div id="root"></div>
+    </div>
+
+    <script>
+        Vue.config.optionMergeStrategies.myOption = function(toVal, fromVal) {
+            // return mergeVal
+        }
+        
+
+        new Vue({
+            el: '#root'
+        })
+    </script>
+</body>
+</html>

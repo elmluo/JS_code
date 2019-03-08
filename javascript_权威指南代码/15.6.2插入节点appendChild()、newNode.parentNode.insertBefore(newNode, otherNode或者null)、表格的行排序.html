@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>表格的行排序</title>
+	<table border="1" 
+		bgcolor="#ffeegg" 
+		cellspacing="10"
+		align="center" valign="middle"
+		style="background-size: 100% 100%; background-repeat: no-repeat;"
+		>
+		<caption>我的标题</caption>
+		<thead>
+			<tr><th colspan="2">aaa</th><th>bbb</th><th>ccc</th><th>ddd</th></th>
+		</thead>
+		<tbody>
+			<tr><td colspan="2" align="left">111</td><td>111</td><td>111</td><td>111</td></tr>
+			<tr><td>444</td><td>444</td><td>444</td><td>444</td><td>444</td></tr>
+			<tr><td colspan="2">333</td><td>333</td><td>333</td><td>333</td></tr>
+			<tr><td colspan="2">222</td><td colspan="2">222</td><td>222</td></tr>
+		</tbody>
+	</table>
+</head>
+<body>
+	<script type="text/javascript">
+		var table = document.getElementsByTagName('table')[0];
+		/**
+		 * 根据指定表格每行第n个单元格的值，对第一个<tbody>中的进行比较
+		 * 如果存在comparator函数那么就使用它，否则按照字母排序表比较
+		 * 		rowslist
+		 * 		rowslist.sort(function(row1, row2){return //...})
+		 * 		tbody.appendChild([item in rowsList])
+		 * 		
+		 * @param  {[type]} table      [description]
+		 * @param  {[type]} n          [description]
+		 * @param  {[type]} comparator [description]
+		 * @return {[type]}            [description]
+		 */
+		function sortrows(table, n, comparator) {
+			var tbody = table.tBodies[0];		// 第一个<tbody>可能是隐式创建的。
+			var rows = tbody.getElementsByTagName("tr");	// tbody中的所有行
+			rows = Array.prototype.slice.call(rows, 0);		// 真实数组的快照
+			// 基于第n个<td>元素的值对行进行排序。
+			rows.sort(function(row1, row2) {
+				var cell1 = row1.getElementsByTagName('td')[n];		// 获得第n个单元格。
+				var cell2 = row2.getElementsByTagName('td')[n];		// 两行都是
+				var val1 = cell1.textContent || cell1.innerText;	// 获取文本类容
+				var val2 = cell2.textContent || cell2.innerText;	// 两行都是
+				if (comparator) return comparator(val1, val2);		// 进行比较
+				if (val1 < val2) return -1;     // 如果值是相等的
+				else if (val1 > val2) return 1;
+				else return 0;
+			});
+			// tbody中按照他们的顺序，把行添加
+			for (var i = 0; i < rows.length; i++) {
+				tbody.appendChild(rows[i]);
+			}
+		}
+
+		/**
+		 * 查找表格的<th>元素（假设只有一行），让他们可以点击，
+		 * 以便单击列标题，看点击了第几页，按该列对行排序。
+		 *
+		 * 		thList
+		 * 		item[in thList].onclick = sortrows
+		 * 		
+		 * @param  {[type]} table [description]
+		 * @return {[type]}       [description]
+		 */
+		function makeSortable(table) {
+			var headers = table.getElementsByTagName('th');
+			for (var i = 0; i < headers.length; i++) {
+				(function(n){
+					headers[i].onclick = function() {
+						sortrows(table, n);
+					}
+				}(i));
+			}
+		}
+
+		makeSortable(table);
+	</script>
+</body>
+</html>

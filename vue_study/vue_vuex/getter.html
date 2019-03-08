@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>vuex_getter</title>
+	<script src="vue.js"></script>
+	<script src="vuex.js"></script>
+</head>
+<body>
+	<h1>vuex_getter</h1>
+	<div class="app"></div>
+	</div>
+	<script>
+		Vue.use(Vuex);
+
+		/**
+		 * 状态管理store
+		 * 	state
+		 *  mutations
+		 *  
+		 *  Vuex 允许我们在 store 中定义“getter”（可以认为是 store 的计算属性）。
+		 *  就像计算属性一样，getter 的返回值会根据它的依赖被缓存起来，
+		 *  且只有当它的依赖值发生了改变才会被重新计算。
+		 *  
+		 *  
+		 */
+		 const store = new Vuex.Store({
+		 	state: {
+		 		todos: [
+		 			{id: 1, text: '11111111', done: true},
+		 			{id: 2, text: '22222222', done: false},
+		 			{id: 3, text: '33333333', done: false},
+		 			{id: 4, text: '44444444', done: true},
+		 		]
+		 	},
+
+		 	// Getter 中接受 state 作为其第一个参数,
+		 	// 并将得到属性作为 store.getters对象
+		 	getters: {
+		 		doneTodos: state=> {
+		 			return state.todos.filter(todo=> todo.done)
+		 		},
+
+		 		// getter也可以接受其他getter作为第二个参数
+		 		doneTodosCount: (state, getters)=> {
+		 			return getters.doneTodos.length
+		 		},
+
+		 		// 你也可以通过让getter返回一个函数，来实现给getter传递一个参数
+		 		// 在store中的数组进行查询非常的有用
+		 		getTodoById: (state)=> (id)=> {
+		 			return state.todos.find(v => v.id === id)
+		 		}
+		 	},
+
+		})
+		
+
+		rootVm = new Vue({
+			el: '.app',
+			store,
+			template: '\
+				<div class="app">\
+			    </div>\
+			',
+			data () {
+				return {
+				}
+			},
+			computed: {
+				// mapGetters 辅助函数仅仅是将 store 中的 getter 映射到局部计算属性：
+				// ...Vuex.mapGetters(['doneTodos', 'doneTodosCount', 'getTodoById'])	
+				
+				// 如果你想将一个 getter 属性另取一个名字，使用对象形式
+				...Vuex.mapGetters({doneTodos: 'doneTodos', doneTodosCount: 'doneTodosCount', getTodoById: 'getTodoById'})
+							
+			},
+			created() {
+				// console.log(this.$store.getters);
+				// 我们可以很容易地在任何组件中使用它：
+				console.log(this.$store.getters.doneTodos);
+				console.log(this.$store.getters.doneTodosCount);
+				console.log(this.$store.getters.getTodoById(2));
+				console.log("*******************************")
+				console.log(this.doneTodos);
+				console.log(this.doneTodosCount)
+				console.log(this.getTodoById(2))
+			}
+		})
+	</script>
+</body>
+</html>

@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <script src="vue.js"></script>
+</head>
+<body>
+    <div>
+        <ul>
+            <li>el: 指令钩子会被传入以下参数,可以用来直接操作DOM</li>
+            <li>binding: 一个对象，可以包含用以下属性
+                <ul>
+                    <li>name: 指令名字，不包括v-前缀</li>
+                    <li>value: 指令绑定值v-my-directive="1+1"中的2</li>
+                    <li>oldValue: 指令绑定的前一个值，仅在update的componentUpdated钩子中可用。无论值是否该改变都可用</li>
+                    <li>expression: 字符串的形式的指令表达式。如指令绑定的v-my-directive="1+1"中的"1+1"</li>
+                    <li>arg: 传给指令的参数，可选。例如v-my-directive:foo中参数为foo</li>
+                    <li>modifiers：一个包含修饰符的对象。例如： v-my-directive.foo.bar中</li>
+                </ul>
+            </li>
+            <li>vnode: Vue编译生成的虚拟节点。移步VNode API来了解更多的详情</li>
+            <li>oldNode: 上一个虚拟节点，仅在update和component钩子中使用。</li>
+            <li>除了el之外，其它参数都应该是只读的，切勿进行修改。如果需要在钩子中间共享数据，建议通过元素的dataset来进行</li>
+        </ul>
+            
+       
+
+        <div id="hook-argurements-example" v-demo:foo.a.b="message">
+        </div>
+    </div>
+
+    <script>
+        Vue.directive('demo', {
+            bind: function(el, binding, vnode) {
+                var s = JSON.stringify;
+                el.innerHTML=
+                    'name:' +s(binding.name) + '<br>' +
+                    'value:' +s(binding.value) + '<br>' +
+                    'expression:' +s(binding.expression) + '<br>' +
+                    'arg:' +s(binding.arg) + '<br>' +
+                    'modifiers:' +s(binding.modifiers) + '<br>' +
+                    'vnode keys:' +Object.keys(vnode).join('.') + '<br>';
+            }
+        })
+
+        new Vue({
+            el: "#hook-argurements-example",
+            data: {
+                message: 'hello!'
+            }
+        })
+    </script>
+</body>
+</html>

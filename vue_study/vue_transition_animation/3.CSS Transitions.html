@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>CSS过渡</title>
+    <style>
+        /* 可以设置不同的进入和离开动画 */
+        /* 设置持续时间和动画函数 */
+        .slide-fade-enter-active {
+            transition: all 2s ease
+        }
+        .slide-fade-leave-active {
+            transition: all .8s cubic-bezier(0.075, 0.82, 0.165, 1);
+        }
+
+        .slide-fade-enter, .slide-fade-leave-to{
+            background-color: yellow;
+            transform: translateX(10px);
+            opacity: 0;
+        }
+    </style>
+    <script src="vue.js"></script>
+</head>
+<body>
+    <div id="example-1">
+        <button @click="show = !show">
+            Toggle render
+        </button>
+        <transition name="slide-fade">
+            <p v-if="show">hello</p>
+        </transition>
+    </div>
+    <script>
+        new Vue({
+            el: "#example-1",
+            data() {
+                return {
+                    show: true,
+                }
+            }
+        })
+    </script>
+</body>
+</html>

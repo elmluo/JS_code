@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>混入</title>
+    <script src="vue.js"></script>
+</head>
+<body>
+    <div>
+        <span>混入mixins是一种分发Vue组件中可复用功能非常灵活的方式</span>
+        <br>
+        <span>混入对象可以包含任意组件选项</span>
+        <br>
+        <span>当组件使用混入对象时，所有混入对象的选项将被混入该组件本身的选项</span>
+        <br>
+
+        <script>
+            // 定义一个混入对象
+            var myMixin= {
+                created() {
+                    this.hello();
+                },
+                methods: {
+                    hello() {
+                        console.log("hello from mixin");
+                    }
+                }
+            }
+
+            // 定义一个使用混入对象的组件
+            var Component = Vue.extend({
+                mixins: [myMixin]
+            })
+            var component = new Component()
+        </script>
+    </div>
+</body>
+</html>

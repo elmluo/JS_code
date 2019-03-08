@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>	删除和替换节点</title>
+</head>
+<body>
+	<div>	
+		<ul>
+			<li>111</li>
+			<li>222</li>
+			<li>333</li>
+			<li>444</li>
+			<li>555</li>
+			<li>666</li>
+		</ul>
+	</div>	
+	<div>
+		<button onclick="handleClick();" >change</button>
+		<p>	Lorem ipsum dolor sit amet.</p>
+	</div>
+
+
+	<script type="">
+		var liList = document.getElementsByTagName('li');
+		/**
+		 * 删除节点
+		 */
+		// 类数组可以循环，但是不能直接调用数组的方法，但是可以间接调用
+		// for (var i = 0; i < liList.length; i++) {
+		// 	liList[i].style.backgroundColor = 'red';
+		// }
+		// 类数组对象间接调用数组的方法
+		var lis = Array.prototype.map.call(liList, function(v){
+			return v
+		})
+		lis.forEach(function(v){v.style.color = 'blue'});
+		li2 = liList[1];
+		li2.parentNode.removeChild(li2);
+
+		/**
+		 * 替换节点
+		 */
+		li3 = liList[2];
+		li3.parentNode.replaceChild(document.createTextNode('你好你好你好'), li3);
+
+		/**
+		 * replaceChild()的另外一种用法
+		 * 用一个新的<b>元素节点替换n节点，并使n成为该元素的子节点。
+		 */
+		function embolden(n) {
+			if (typeof n == 'string') n = document.getElementById(n);
+			var parent = n.parentNode;
+			var b = document.createElement('b');
+			parent.replaceChild(b, n);
+			b.appendChild(n);
+		}
+		var p = document.getElementsByTagName('p')[0]
+		function handleClick(e) {
+			embolden(p);
+		}
+
+		/**
+		 * 例子： 使用innerHTML实现 outerHTML
+		 * 		为那些不支持它的浏览器实现outerHTML属性
+		 *   	假设浏览器确实支持innerHTML，并且有个可以扩展的Element.prototype
+		 *   	并且可以定义getter和setter;
+		 */
+		;(function(){
+			// if (document.createElement('div').outerHTML) return ;
+
+			// 返回this所引用的元素的外部HTMl
+			function outerHTMLGetter() {
+				var container = document.createElement('div');		// 虚拟元素 
+				container.appendChild(this.cloneNode(true));		// 复制到该虚拟节点 
+				return container.innerHTML;							// 返回虚拟节点的innerHTML。
+			}
+
+			function outerHTMLSetter(value) {
+				var container = document.createElement("div");
+				container.innerHTML = value;
+				while(container.firstChild) {
+					this.parentNode.insertBefore(container.firstChild, this);
+				}
+				this.parentNode.removeChild(this);
+			}
+
+			// 现在如果使用者两个函数作为所有Element对象的outerHTML属性的getter和setter 
+			// 如果它存在则使用ES5的Object.defineProperty()方法，
+			// 否则，退而求其次，使用__defineGetter()和__defineSetter(); 
+			if (Object.defineProperty) {
+				Object.defineProperty(Element.prototype, "outerHTMl", {
+					get: outerHTMLGetter,
+					set: outerHTMLSetter,
+					enumerable: false,		// 不可以枚举
+					configurable: true,		// 可以修改
+				})
+			} else {
+				Element.prototype.__defineGetter__("outerHTML", outerHTMLGetter);
+				Element.prototype.__defineSetter__("outerHTML", outerHTMLSetter);
+			}
+		}());
+	</script>
+</body>
+</html>

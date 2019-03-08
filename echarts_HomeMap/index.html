@@ -1,0 +1,651 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+            <title>
+                Document
+            </title>
+            <style type="text/css">
+                body, html,#allmap {width: 100%;height: 100%;overflow: hidden;margin:0;font-family:"微软雅黑";}
+                span{
+                    position: absolute;
+                    display: block;
+                    font-size: 12px;
+                    color: #fff;
+                    background-color: rgba(0,0,0,0.4);
+                    pointer-events: none;
+                    visibility: hidden;
+                }
+                #location{
+                    position: absolute;
+                    top: 10px;
+                    left: 10px;
+                    pointer-events: none;
+                    font-size: 36px;
+                    color: #fff;
+                }
+                #hover{
+                    position: absolute;
+                    white-space: nowrap;
+                    margin-top: 5px;
+                    margin-left: 10px;
+                    border: 1px solid #000;
+                    background-color: #fff;
+                    pointer-events: none;
+                }
+            </style>
+        </meta>
+    </head>
+    <body>
+        <div id="allmap">
+        </div>
+        <div id="location"></div>
+        <div id="hover"></div>
+        <script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.js"></script>
+        <script src="china.js"></script>
+        <script src="http://api.map.baidu.com/library/GeoUtils/1.2/src/GeoUtils.js"></script>
+        <script src="http://api.map.baidu.com/api?v=2.0&ak=Zex6o5pzxTxYqtx9MGM6Z97u" type="text/javascript">
+        </script>
+        <script>
+
+                var bdary = new BMap.Boundary();
+                var geoc = new BMap.Geocoder();
+                var chinaPlain = [[], [], []];
+                var lastTier = [];
+                var labels = [];
+                var mapLocation;
+                var map = new BMap.Map("allmap");    // 创建Map实例
+
+                map.centerAndZoom(new BMap.Point(116.404, 39.915), 11);  // 初始化地图,设置中心点坐标和地图级别*     
+                map.setMapStyle({
+                    styleJson: [{
+                        "featureType": "water",
+                        "elementType": "all",
+                        "stylers": {
+                            "color": "#010037"
+                        }
+                    }, {
+                        "featureType": "highway",
+                        "elementType": "geometry.fill",
+                        "stylers": {
+                            "color": "#071125"
+                        }
+                    }, {
+                        "featureType": "arterial",
+                        "elementType": "geometry.fill",
+                        "stylers": {
+                            "color": "#000000"
+                        }
+                    }, {
+                        "featureType": "arterial",
+                        "elementType": "geometry.stroke",
+                        "stylers": {
+                            "color": "#0b3d51"
+                        }
+                    }, {
+                        "featureType": "local",
+                        "elementType": "geometry",
+                        "stylers": {
+                            "color": "#000000"
+                        }
+                    }, {
+                        "featureType": "land",
+                        "elementType": "all",
+                        "stylers": {
+                            "color": "#061d4c"
+                        }
+                    }, {
+                        "featureType": "railway",
+                        "elementType": "geometry.fill",
+                        "stylers": {
+                            "color": "#000000"
+                        }
+                    }, {
+                        "featureType": "railway",
+                        "elementType": "geometry.stroke",
+                        "stylers": {
+                            "color": "#08304b"
+                        }
+                    }, {
+                        "featureType": "subway",
+                        "elementType": "geometry",
+                        "stylers": {
+                            "lightness": -70
+                        }
+                    }, {
+                        "featureType": "building",
+                        "elementType": "geometry.fill",
+                        "stylers": {
+                            "color": "#000000"
+                        }
+                    }, {
+                        "featureType": "all",
+                        "elementType": "labels.text.fill",
+                        "stylers": {
+                            "color": "#857f7f"
+                        }
+                    }, {
+                        "featureType": "all",
+                        "elementType": "labels.text.stroke",
+                        "stylers": {
+                            "color": "#000000"
+                        }
+                    }, {
+                        "featureType": "building",
+                        "elementType": "geometry",
+                        "stylers": {
+                            "color": "#022338"
+                        }
+                    }, {
+                        "featureType": "green",
+                        "elementType": "geometry",
+                        "stylers": {
+                            "color": "#062032"
+                        }
+                    }, {
+                        "featureType": "boundary",
+                        "elementType": "all",
+                        "stylers": {
+                            "color": "#38fffd"
+                        }
+                    }, {
+                        "featureType": "manmade",
+                        "elementType": "all",
+                        "stylers": {
+                            "color": "#022338"
+                        }
+                    }, {
+                        "featureType": "highway",
+                        "elementType": "geometry",
+                        "stylers": {
+                            "color": "#071125",
+                            "weight": "0.4",
+                            "visibility": "on"
+                        }
+                    }, {
+                        "featureType": "highway",
+                        "elementType": "labels",
+                        "stylers": {
+                            "visibility": "off"
+                        }
+                    }, {
+                        "featureType": "label",
+                        "elementType": "labels.text.fill",
+                        "stylers": {
+                            "color": "#38fffd"
+                        }
+                    }, {
+                        "featureType": "label",
+                        "elementType": "labels.text.stroke",
+                        "stylers": {
+                            "weight": "0.1",
+                            "visibility": "on"
+                        }
+                    }, {
+                        "featureType": "label",
+                        "elementType": "labels.icon",
+                        "stylers": {
+                            "visibility": "off"
+                        }
+                    }]
+                });
+                // map.setCurrentCity("中国");          // 设置地图显示的城市 此项是必须设置的
+                map.enableScrollWheelZoom(true);     // 开启鼠标滚轮缩放
+
+                // 将中国的省市区三级单独分成三个数组
+                china.nextTier.forEach(function (v) {
+                    chinaPlain[0].push(v)
+                    v.nextTier.forEach(function (u) {
+                        chinaPlain[1].push(u)
+                        u.nextTier.forEach(function (w) {
+                            chinaPlain[2].push(w)
+                        })
+                    })
+                })
+
+                /*map.addEventListener('click', function (e) {
+                    geoc.getLocation(e.point, function (res) {
+                        var addComp = res.addressComponents;
+                        var lastPos = [addComp.province, addComp.city, addComp.district, addComp.street, addComp.streetNumber].filter(function (v) { return !!v; }).join(', ');
+
+                        alert(lastPos)
+                    });
+                });*/
+                
+                // var rects = []
+
+                /**降低图形质量 该方法不考虑**/
+                /* function getBoundary(){
+                    // bdary.get("浙江省杭州市", draw);  
+                    // bdary.get("浙江省宁波市", draw);    
+                    // bdary.get("浙江省绍兴市", draw);    
+                    // bdary.get("浙江省舟山市", draw);      
+                    // bdary.get("浙江省衢州市", draw);      
+                    // bdary.get("浙江省金华市", draw);     
+                    // bdary.get("浙江省台州市", draw);      
+                    // bdary.get("浙江省温州市", draw);      
+                    // bdary.get("浙江省丽水市", draw);      
+                    china.nextTier.forEach(function (v, i) {
+                        bdary.get(v.name, function (rs) {
+                            // var coords = rs.boundaries.map(function (u) {
+                                // coord = u.split(';')
+                                // xMax = Math.max.apply(0, coord.map((w) => +w.split(',')[0]))
+                                // yMax = Math.max.apply(0, coord.map((w) => +w.split(',')[1]))
+                                // xMin = Math.min.apply(0, coord.map((w) => +w.split(',')[0]))
+                                // yMin = Math.min.apply(0, coord.map((w) => +w.split(',')[1]))
+                                // return {
+                                   // xMax, yMax, xMin, yMin
+                                // }
+                            // })
+
+                            // var top =  Math.max.apply(0, coords.map((w) => w.yMax))
+                            // var bottom =  Math.min.apply(0, coords.map((w) => w.yMin))
+                            // var left =  Math.min.apply(0, coords.map((w) => w.xMin))
+                            // var right =  Math.max.apply(0, coords.map((w) => w.xMax))
+
+                            // console.log(v.name, [top, right, bottom, left])
+
+                            // rects.push({name: v.name, rect: [top, right, bottom, left]})
+
+                            // draw(rs)
+                            // var rect = rects.find(u => u.name === v.name)
+                            // var boundary = rect.rect[3] + ',' + rect.rect[0] + ';' + rect.rect[1] + ',' + rect.rect[0] + ';' + rect.rect[1] + ',' + rect.rect[2] + ';' + rect.rect[3] + ',' + rect.rect[2]
+                            // var ply = new BMap.Polygon(boundary, {strokeWeight: 2, strokeColor: "#ff00ff"}); //建立多边形覆盖物
+                            // map.addOverlay(ply);  //添加覆盖物
+                        })
+                    })
+                    function draw (rs) {       //获取行政区域
+                        var count = rs.boundaries.length; //行政区域的点有多少个
+                        if (count === 0) {
+                            alert('未能获取当前输入行政区域');
+                            return ;
+                        }
+                        var pointArray = [];
+                        // map.clearOverlays();
+                        rs.boundaries = rs.boundaries.map(function (v) {
+                          return v.split(';').filter(function (u, i) {
+                              return i % 10 === 0
+                          }).join(';')
+                        })
+                        for (var i = 0; i < count; i++) {
+                            var ply = new BMap.Polygon(rs.boundaries[i], {strokeWeight: 2, strokeColor: "#ff0000"}); //建立多边形覆盖物
+                            map.addOverlay(ply);  //添加覆盖物
+                            pointArray = pointArray.concat(ply.getPath());
+                        }      
+                    }
+                } */
+
+                /**
+                 * 初始化一个地区的边界
+                 * 同时计算这个边界的外接矩形
+                 * @Author   chenht
+                 * @DateTime 2018-05-14
+                 */
+                function initBoundaries (v, callback) {
+                    return function (rs) {
+                        // 一个地区会有多个边界(不相邻)
+                        v.boundaries = rs.boundaries.map(function (u) {
+                            return new BMap.Polygon(u)
+                        })
+                        // 计算每条边界的上下左右的范围,计算合起来之后的最大值。
+                        v.rect = ['Fe','Ge','Ke','Le'].map(function (u) {
+                            var list = []
+                            v.boundaries.forEach(function (w) {
+                                list.push(w.Ou[u])
+                            })
+                            if (u === 'Fe' || u === 'Ge') {
+                                return Math.max.apply(0, list)
+                            } else {
+                                return Math.min.apply(0, list)
+                            }
+                        })
+                        callback && callback(v)
+                    }
+                }
+
+                /**
+                 * 渲染单条边界
+                 * 并绑定点击事件.
+                 * @Author   chenht
+                 * @DateTime 2018-05-14
+                 * @param    {[type]}   v     区域对象
+                 */
+                function render (v, color) {
+                    color = color || "#38fffd"
+                    for (var i = 0; i < v.boundaries.length; i++) {
+                        var ply = new BMap.Polygon(v.boundaries[i].ia, {strokeWeight: 2, strokeColor: color, fillColor: 'rgba(0,0,0,0.2)'}); //建立多边形覆盖物
+                        ply.addEventListener('click', function () {
+                            var scaleList = new Array(19).join('.').split('.').map(function (v, i) {
+                                return 111321 / Math.pow(2, 18 - i)
+                            });
+                            map.setCenter(new BMap.Point((v.rect[1] + v.rect[3]) / 2, (v.rect[0] + v.rect[2]) / 2));
+                            var scale = Math.min($('#allmap').height() / (v.rect[0] - v.rect[2]), $('#allmap').width() / (v.rect[1] - v.rect[3]));
+                            var res = 0;
+                            for (var j = 0; j < scaleList.length; j++) {
+                                if (scale < scaleList[j] * 0.7) {
+                                    break;
+                                }
+                                res = j;
+                            }
+                            map.setZoom(res)
+                            setTimeout(function () {
+                                locate(v.tier)
+                            }, 300);
+                        })
+                        map.addOverlay(ply);  //添加覆盖物
+                    }  
+                }
+
+                /**
+                 * 一次性渲染所有需要渲染的边界.
+                 * @Author   chenht
+                 * @DateTime 2018-05-14
+                 */
+                function renderAll (filtered) {
+                    var min = map.pixelToPoint(new BMap.Pixel(0, $('#allmap').height()));
+                    var max = map.pixelToPoint(new BMap.Pixel($('#allmap').width()), 0);
+                    var view = [max.lat, max.lng, min.lat, min.lng];
+                    // 如果locate方法以及计算出了当前看到的区域, 且该区域低于等于区级（市或者区）.
+                    if (mapLocation && mapLocation[1]) {      
+                        // 计算出省和市的区域对象.
+                        var province = china.nextTier.filter(function (v) {
+                            return v.name === mapLocation[0]
+                        })[0]
+                        var city = province.nextTier.filter(function (v) {
+                            return v.name === mapLocation[1]
+                        })[0]                     
+                        if (city && city.childrenState === 'ready') {
+                            // 渲染该市下的所有的区。
+                            city.nextTier.forEach(function (v) {
+                                if (!v.rect ||
+                                    v.rect[2] > view[0] ||
+                                    v.rect[0] < view[2] ||
+                                    v.rect[1] < view[3] ||
+                                    v.rect[3] > view[1]) {
+                                    return
+                                }
+                                render(v)  
+                            })
+                        }
+                    } else if (mapLocation && mapLocation[0]) { // 如果只到省，那么渲染该省下的所有市。
+                        var province = china.nextTier.filter(function (v) {
+                            return v.name === mapLocation[0]
+                        })[0]
+                        if (province && province.childrenState === 'ready') {
+                            province.nextTier.forEach(function (v) {
+                                if (!v.rect ||
+                                    v.rect[2] > view[0] ||
+                                    v.rect[0] < view[2] ||
+                                    v.rect[1] < view[3] ||
+                                    v.rect[3] > view[1]) {
+                                    return
+                                }
+                                render(v)  
+                            })
+                        }
+                    }
+                    // 渲染鼠标选中的区域。
+                    if (filtered) {
+                        render(filtered, '#00ff00');
+                    }
+                }
+
+                /**
+                 * 判断点是不是在边界中.
+                 * @Author   chenht
+                 * @DateTime 2018-05-14
+                 */
+                function isPointInBoundary(point, area) {
+                    return area.rect &&
+                        point.lat > area.rect[2] && 
+                        point.lat < area.rect[0] && 
+                        point.lng > area.rect[3] && 
+                        point.lng < area.rect[1] &&
+                        area.boundaries.some(function (u) {
+                            return BMapLib.GeoUtils.isPointInPolygon(point, u)
+                        })
+                }
+                /**
+                 * 极坐标转换成直角坐标。
+                 * @Author   chenht
+                 * @DateTime 2018-05-14
+                 * @param    {[type]}   rhoLevel 表示圆心开始的第几个同心圆。（或者几个单位圆）
+                 */
+                function polarToCartesian(rhoLevel, theta) {
+                    var scale = 0.5;
+                    var maxRhoLevel = 2
+                    var height = $('#allmap').height();
+                    var width = $('#allmap').width();
+                    var radiusMax = Math.min(height, width) / 2;
+                    var offsetX = rhoLevel / maxRhoLevel * radiusMax * Math.cos(theta) * scale;
+                    var offsetY = rhoLevel / maxRhoLevel * radiusMax * Math.sin(theta) * scale;
+                    return [width / 2 + offsetX, height / 2 + offsetY];
+                }
+
+                /**
+                 * 添加label
+                 * @Author   chenht
+                 * @DateTime 2018-05-14
+                 */
+                function addLabel (rhoLevel, theta) {
+                    var label = $('<span class="label' + i + '"></span>');
+                    $('body').append(label);
+                    var pos = polarToCartesian(rhoLevel, theta);
+                    label.css({top: pos[1] + 'px', left: pos[0] + 'px'});
+                    labels.push(label);
+                }
+
+                /**
+                 * 计算用户当前看到的区域是什么。
+                 * @Author   chenht
+                 * @DateTime 2018-05-14
+                 */
+                function locate (tier) {
+                    var i = 0;
+
+                    // 当每一个点的信息都获取到了之后执行judge方法
+                    function cb () {
+                        i++;
+                        if (i >= labels.length) {
+                            judge()
+                        }
+                    };
+
+                    // 根据locate方法去调用加载子集地图的方法.
+                    function autoDraw () {
+                        setTimeout(function() {
+                            var x = $('#allmap').width() / 2;
+                            var y = $('#allmap').height() / 2;
+                            onMapMouseMove({point: map.pixelToPoint(new BMap.Pixel(x, y))})
+                        }, 0);
+                    }
+
+                    function judge () {
+                        // 圆心的点为要判断的点。（基准点）
+                        var location = labels[0].data('location');
+                        var level = 2;
+                        // 判断其余的24个点有多少和圆心的相似度。
+                        // 依次判断2区、1市、0省是否一致。
+                        for (var i = level; i >= 0; i--) {
+                            // 判断24个点中有几个在2区、1市、0省上和圆心一致。
+                            var sameCount = labels.filter(function (v) {
+                                var l = v.data('location')
+                                for (var j = 0; j <= i; j++) {
+                                    if (l[j] !== location[j] && l[j] !== '') {
+                                        return false;
+                                    }
+                                }
+                                return true;
+                            }).length;
+                            // 如果一致的超过了一半。我们可以认为他当前就是看到了这个区域。
+                            if (sameCount / labels.length > 0.49) {
+                                break;
+                            }
+                        }
+                        if (i < 0) {
+                            $('#location').text('中国');
+                            mapLocation = null
+                        } else {
+                            $('#location').text('中国,' + location.slice(0, i + 1).join(','));
+                            var lastLocation = mapLocation;
+                            mapLocation = location.slice(0, i + 1);
+                            // 如果与前一次不同则加载地图.
+                            if ([0, 1, 2].some(function (v) {
+                                return !lastLocation || mapLocation[v] !== lastLocation[v]
+                            })) {
+                                autoDraw();
+                            }
+                        }
+                    };
+
+                    // 如果参数中传来了tier（即鼠标点击选中了某个区域）
+                    // 则不计算，直接将区域设置为该值。
+                    if (tier && Array.isArray(tier)) {
+                        $('#location').text('中国,' + tier.map(function (v) {return v.name}).join(','));
+                        mapLocation = tier.map(function (v) {return v.name})
+                        autoDraw();
+                        return;
+                    }
+                    // 遍历25个label，采集对应点的坐标信息。
+                    labels.forEach(function (v) {
+                        var point = new BMap.Pixel(v.offset().left, v.offset().top);
+                        point = map.pixelToPoint(point);
+                        // 该方法返回某个坐标点的详细地理层级信息。
+                        geoc.getLocation(point, function (res) {
+                            var addComp = res.addressComponents;
+                            v.text([addComp.province, addComp.city, addComp.district, addComp.street, addComp.streetNumber].join(', '))
+                            v.data('location', [addComp.province, addComp.city, addComp.district])
+                            cb()
+                        });
+                    })
+                }
+
+
+                // 对省级地区初始化。
+                china.nextTier.forEach(function (v, i) {
+                    bdary.get(v.name, initBoundaries(v))
+                })
+
+                function onMapMouseMove (e) {
+                    var tier = []
+                    // 先判断鼠标是不是落在某个省之中。
+                    var filtered = china.nextTier.filter(function (v) {
+                        return isPointInBoundary(e.point, v)
+                    })[0]
+                    if (filtered) {
+                        filtered.fullName = filtered.name
+                        filtered.tier = [filtered]
+                        tier.push(filtered)
+                    }
+                    /* 接下来判断鼠标是不是落在某个市中） */
+                    if (tier[0] && mapLocation && mapLocation[0] === filtered.name) {
+                        // 如果这个省的市区域都加载完成了
+                        if (filtered.childrenState === 'ready') {
+                            // 判断鼠标落在哪个市。
+                            var cityFiltered = filtered.nextTier.filter(function (v) {
+                                return isPointInBoundary(e.point, v)
+                            })[0]
+                            if (cityFiltered) {
+                                cityFiltered.fullName = tier[0].name + cityFiltered.name
+                                cityFiltered.tier = [tier[0], cityFiltered]
+                                filtered = cityFiltered
+                                tier.push(cityFiltered)
+                            }
+                        } else if (filtered.childrenState !== 'loading') { // 如果没有加载过，就开始加载
+                            filtered.childrenState = 'loading';
+                            var readyCount = 0;
+                            // 依次初始化该省下的市。
+                            filtered.nextTier.forEach(function (v) {
+                                bdary.get(filtered.name + v.name, initBoundaries(v, function () {
+                                    if (++readyCount >= filtered.nextTier.length) {
+                                        filtered.childrenState = 'ready'
+                                        renderAll(filtered)
+                                    }
+                                }))
+                            })
+                        }
+                    }
+                    /* 区级操作， 基本和市的操作一样。 */
+                    if (tier[1] && mapLocation && mapLocation[1] === filtered.name) {
+                        if (filtered.childrenState === 'ready') {
+                            var districtFiltered = filtered.nextTier.filter(function (v) {
+                                return isPointInBoundary(e.point, v)
+                            })[0]
+                            if (districtFiltered) {
+                                districtFiltered.fullName = tier[0].name + tier[1].name + districtFiltered.name
+                                districtFiltered.tier = [tier[0], tier[1], districtFiltered]
+                                filtered = districtFiltered
+                                tier.push(districtFiltered)
+                            }
+                        } else if (filtered.childrenState !== 'loading') {
+                            filtered.childrenState = 'loading';
+                            var readyCount = 0;
+                            filtered.nextTier.forEach(function (v) {
+                                /* 过滤市辖区， 因为市辖区没有地理位置。 */
+                                if (v.name === '市辖区') {
+                                    readyCount++;
+                                    return;
+                                }
+                                bdary.get(tier[0].name + tier[1].name + v.name, initBoundaries(v, function () {
+                                    if (++readyCount >= filtered.nextTier.length) {
+                                        filtered.childrenState = 'ready'
+                                        renderAll(filtered)
+                                    }
+                                }))
+                            })
+                        }                            
+                    }
+
+                    var isSameToLast = true
+                    for (var k = 0; k < 3; k++) {
+                        if (tier[k] !== lastTier[k]) { isSameToLast = false }
+                    }
+                    lastTier = tier;
+                    // 如果结果和上一次一样则不重新渲染。
+                    if (!isSameToLast) {
+                        map.clearOverlays()
+                        renderAll(filtered)
+                    }
+
+                    if (e.offsetX) {
+                        $('#hover').css({
+                            left: e.offsetX + 'px',
+                            top: e.offsetY +'px'
+                        });
+                        $('#hover').text(filtered ? filtered.fullName : '')
+                    }
+                }
+                map.addEventListener('mousemove', onMapMouseMove);
+
+
+                map.addEventListener('dragend', locate);
+
+
+                /**
+                 * 定义鼠标缩放之后重新执行locate方法。
+                 * @Author   chenht
+                 * @DateTime 2018-05-14
+                 */
+                var wheelTimeout;
+                document.getElementById('allmap').addEventListener('mousewheel', function () {
+                    if (wheelTimeout) {
+                        clearTimeout(wheelTimeout)
+                    }
+                    wheelTimeout = setTimeout(function() {
+                        locate()
+                    }, 1000);
+                })
+
+                // 依次添加label用来采集地图上的坐标对应的位置信息
+                // 分布是圆心、一级同心圆（平均八份）、二级同心圆（平均十六份）
+                addLabel(0, 0);
+                for (var i = 0; i < 8; i++) {
+                    addLabel(1, i / 8 * Math.PI * 2)
+                }
+                for (i = 0; i < 16; i++) {
+                    addLabel(2, i / 16 * Math.PI * 2)
+                }
+
+        </script>
+    </body>
+</html>

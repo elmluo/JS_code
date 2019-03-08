@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>过度类名</title>
+    <style>
+        /* 这些样式不会改变最终DOM的状态，只是中间转变的过程，自定义的过程 */
+        /* [0] */
+        .my-transition-enter{
+            opacity: 0;
+            background-color: red;
+         }
+        /* （0，1）*/
+        .my-transition-enter-active{
+            transition: opacity 1s, background-color 1s, width 1s;
+        }
+        /* [1]*/
+        .my-transition-enter-to{
+            opacity: 1;
+            background-color: yellow;
+        }
+        /* [1]*/
+        .my-transition-leave{
+            opacity: 1;
+            background-color: red
+        }
+        /* （1, 0）*/
+        .my-transition-leave-active{
+            transition: opacity 3s, background-color 3s, width 3s;
+        }
+        /* [0] */
+        .my-transition-leave-to{
+            opacity: 0;
+            background-color: blue;
+        }
+
+    </style>
+    <script src="vue.js"></script>
+</head>
+<body>
+    <div id="demo">
+        <button v-on:click="show = !show">doit</button>
+        <transition name="my-transition">
+            <div v-if="show">hello</div>
+        </transition>
+    </div>
+    <script>
+        new Vue({
+            el: '#demo',
+            data() {
+                return {
+                    show: true
+                }
+            }
+        })
+    </script>
+</body>
+</html>

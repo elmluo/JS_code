@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>选取表单和表单元素</title>
+</head>
+<body>
+	<form action="" name="address" id="shopping" 
+		onreset="return confirm('确定是否需要充值')"
+		onsubmit="return confirm('确定是否提交表单')">
+		
+		<input type="radio" name="sex" id="radioMale" value="male" checked="checked" onclick="handleRadioChecked(this)">
+		<label for="radioMale">男</label>
+		<input type="radio" name="sex" id="radioFemale" value="female" onclick="handleRadioChecked(this);">
+		<label for="radioFemale">女</label>
+
+		<hr>
+
+		<label><input type="checkbox" name="project" value="chinese"> 语文</label>
+		<label><input type="checkbox" name="project" value="english" checked="checked">英语</label>
+		<label><input type="checkbox" name="project" value="math">数学</label>                                                                                                                                                                       <hr>                                                                                              
+		<input type="text" name="textDemo" onchange="handleTextChange(this)">
+		<textarea name="textDemo" id="" cols="30" rows="10" onchange="handleTextChange(this)"></textarea>
+
+		<hr>
+
+		<select name="selectDemo" id="" multiple size="2" onchange="handleSelctedOption(this)">
+			<option value="111111">111</option>
+			<option value="111111">222</option>
+			<option value="111111">333</option>
+		</select>
+
+		<select name="selectDemo" id="" onchange="handleSelctedOption(this)">
+			<option value="111111" selected="selected">111</option>
+			<option value="222222">222</option>
+			<option value="333333">333</option>
+		</select>
+
+		<hr>	
+
+		<input type="password">	
+
+		<hr>
+		
+		<input type="file" name='upload' onchange="readAsDataUrl(this)">
+		<img id = 'img' src="" alt="">
+		
+		<hr>
+
+		<!-- <input type="submit"> -->
+		<button type="submit">提交</button>
+		<button type='reset'>重置</button>
+
+	</form>
+	<script>
+		
+		/**
+		 * radio 单选表单事件
+		 * @param  {object} context 当前点击的表单this
+		 * @return {[type]}         [description]
+		 */
+		function handleRadioChecked(context) {
+			console.log(context.name, context.value, context.checked);
+		}
+
+		/**
+		 * checkbox 复选表单事件
+		 * 	找到所有，循环为每一个自带的onclick属性添加监听方法。
+		 * @param  {[type]} context [description]
+		 * @return {[type]}         [description]
+		 */
+		function handleCheckboxChecked(e) {
+			var select_project = [];
+			var projects = document.forms.address.project;
+			for (var i = 0; i < projects.length; i++) {
+				projects[i].checked && select_project.push(projects[i].value);
+			}
+			var domObj = e.target
+			console.log(domObj.name, domObj.value, domObj.checked, select_project);
+		}
+		// 循环为表单元素添加点击方法。
+		var checkboxObjs = document.querySelectorAll('#shopping input[type="checkbox"]');
+		Array.prototype.map.call(checkboxObjs, function(v) {
+			console.log(v);
+			v.onclick = handleCheckboxChecked;
+		})
+
+		/**
+		 * 文本表单元素的处理。
+		 * @param  {[type]} context [description]
+		 * @return {[type]}         [description]
+		 */
+		function handleTextChange(context) {
+			console.log(context.name, context.value);
+		}
+
+		/**
+		 * select 下拉框的选取。
+		 * @param  {[type]} context [description]
+		 * @return {[type]}         [description]
+		 */
+		function handleSelctedOption(context) {
+			var texts = [];
+			var options = context.options;
+			var selectedIndex = context.selectedIndex;
+			// 单选的
+			if (context.type === 'select-one') {
+				var option = options[selectedIndex];
+				texts.push({text: option.text, value: option.value})
+			} 
+			// 多选的
+			else if (context.type === 'select-multiple') {
+				for (var i = 0; i < options.length; i++) {
+					options[i].selected && texts.push({text: options[i].text, value: options[i].value});
+				}
+			}
+			console.log(context.name, texts);
+		}
+
+		/**
+		 * file 实现图片预览
+		 * @param  {[type]} context [description]
+		 * @return {[type]}         [description]
+		 */
+		function readAsDataUrl (context) {
+			console.log(context.type, context.name, context.files);
+			var file = context.files[0];
+			if (/image\/w+/.test(file.type)) {
+				alert('请选图片');
+				return false;
+			}
+			var rd = new FileReader();
+			rd.readAsDataURL(file);
+			rd.onload = function() {
+				document.getElementById('img').src = this.result;
+			}
+		}
+	</script>
+</body>
+</html>

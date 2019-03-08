@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>插件</title>
+	<script src="vue.js"></script>
+	<script src="vuex.js"></script>
+</head>
+<body>
+	<div>
+		<i>Vuex的store接收plugins选项,这个选项暴露出每次mutation的钩子。Vuex插件就是一个函数，它接收store作为唯一参数</i>
+	</div>
+
+
+	<script>
+		Vue.use(Vuex);
+
+		// vuex插件就是一个函数，接收store作为参数
+		const myPlugin = store=> {
+			// 当store初始化后调用
+			store.subscribe((mutation, state)=> {
+				// 每次mutation之后调用
+				// mutationde 格式为{type, payload}
+				console.log(mutation, state)
+			})
+			
+		}
+
+		const a = {
+			state() {
+				return {
+					number: 2333
+				}
+			},
+			getters() {
+				return {
+					getNumbers: (state)=> {
+						return state.number * 2
+					}
+				}
+			},
+			mutations() {
+				return {
+					callNewNum: (state, payload)=> {
+						alert(state.number + payload.amount);
+					}
+				}
+			},
+			plugins: [myPlugin]
+		}
+
+
+
+
+		let store = new Vuex.Store({
+			modules: {
+				a
+			}
+		})
+
+	
+	</script>
+</body>
+</html>

@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>todoListDemo</title>
+	<script src="vue.js"></script>
+</head>
+<body>
+	
+	<div id='demo' class="container">
+		<input type="text" v-model='newText' v-on:keyup.enter='addToList'>
+		<ul>
+			<li is="todo-item" v-for='(item, index) in textList' v-bind:key='item.id' v-bind:text='item.text' v-on:remove-item='removeItem(index)'></li>
+		</ul>
+	</div>
+	
+
+
+	<script>
+		// 定义单个的item组件
+		Vue.component('todo-item', {
+		  template: '\
+		    <li>\
+		      {{ text }}\
+		      <button v-on:click="$emit(\'remove-item\')">X</button>\
+		    </li>\
+		  ',
+		  props: ['text']
+		})
+
+
+		new Vue({
+			el: '#demo',
+			data: function() {
+				return {
+					newText: '',
+					nextId: null,
+					textList: [{id: 1, text: '123456'}],
+
+				}
+			},
+			methods: {
+				addToList: function() {
+					this.textList.push({
+						id: this.nextId ++,
+						text: this.newText
+					});
+				},
+				removeItem: function(index) {
+					this.textList.splice(index, 1);
+					console.log(index)
+				}
+			}
+		}) 
+
+
+
+
+
+
+
+	</script>
+</body>
+</html>

@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>module</title>
+	<script src="vue.js"></script>
+	<script src="vuex.js"></script>
+</head>
+<body>
+	<div>
+		<h1>Module</h1>
+		<span>
+			由于使用单一状态树，应用的所有状态会集中到一个比较大的对象。当应用变得非常复杂时，store 对象就有可能变得相当臃肿。
+		</span>
+		<br>
+		<span>
+			为了解决以上问题，Vuex 允许我们将 store 分割成模块（module）。每个模块拥有自己的 state、mutation、action、getter、甚至是嵌套子模块——从上至下进行同样方式的分割：
+		</span>
+
+		<div class="app">
+		</div>
+	</div>
+
+	<script>
+		Vue.use(Vuex);
+		const a = {
+			//如果希望你的模块具有更高的封装度和复用性，
+			//你可以通过添加 namespaced: true 的方式使其成为命名空间模块。
+			//当模块被注册后，它的所有 getter、action 及 mutation 都会自动根据模块注册的路径调整命名.
+			//组件里面调用如this.$state.commit('a/increment')
+			namespaced: true,
+			state: {	// 模块内的state状态，vuex已经实现嵌套了，使用‘namespaced’不会对它产生影响
+				count: 0,
+				name: 'a',
+			},
+
+			// 对于模块内部的 mutation 和 getter，
+			// 接收的第一个参数是模块的局部状态对象。
+			mutations: {
+				increment: (state, playLoad)=> {
+					state.count+=playLoad.amount
+				},
+				callName: (stat, playLoad)=> {
+
+				}
+			},
+
+			//对于模块内部的 getter，根节点状态会作为第三个参数暴露出来：
+			getters: {
+				doubleCount (state) {
+					return state.count*2;
+				},
+				sumWithRootCount(state, getters, rootState) {
+					return state.count + rootState.count;
+				},
+				infoA(state, getters, rootState, rootGetters) {
+					return "this is " + state.name;
+				}
+			},
+
+			// 同样，对于模块内部的 action，
+			// 局部状态通过 context.state 暴露出来，
+			// 根节点状态则为 context.rootState
+			actions: {
+				incrementIfOddOnRootSum({state, commit, rootState}, playLoad) {
+					alert(123456);
+					if ((state.count + rootState.count) % 2 === 1) {
+						commit('increment', playLoad)
+					}
+				}
+			},
+
+
+			// 嵌套模块
+			modules: {
+				// 继承父亲模块儿的命名空间
+				myPage: {
+					state: {
+						pageNum: 111,
+					},
+					getters: {
+						profile(state) {
+							return state.pageNum * 2;
+						}
+					}
+				},
+
+				// 进一步的嵌套命名空间
+				posts: {
+					namespaced: true,
+					state: {
+						name: 'luochao',
+					},
+					getters: {
+						popular (state) {
+							return state + 'is Chinese'
+						}
+					}
+				}
+			}
+
+
+		};
+
+		const b = {
+			namespaced: true,
+			state: {
+				name: 'b',
+				number: 1
+			},
+			// 在命名空间模块内访问全局内容（Global Assets）
+			// 在这个模块的 getter 中，`getters` 被局部化了
+      		// 你可以使用 getter 的第四个参数来调用 `rootGetters`,获取其他模块的状态
+			getters: {
+				info(state, getters, rootState, rootGetters) {
+					return "my name is " + state.name;
+				}
+			},
+			mutations: {
+				dealInfo: (state, payLoad)=> {
+					return state.info + payLoad.amount;
+				}
+			},
+			actions: {
+				dealInfoAsync: ({state, commit, dispatch, getters, rootGetters},  payLoad)=> {
+					setTimeout(()=> {
+						commit('dealInfo', payLoad);
+						// b模块中调用a的getter和actions
+						console.log(rootGetters)
+						console.log(rootGetters['a/doubleCount'], 666666);
+						dispatch('a/incrementIfOddOnRootSum', null, {root: true});
+					}, 1000)
+				}
+			}
+
+		};
+		const c = {
+			namespaced: true,
+			// 例如创建对个store, 他们公用同一个同一个模块、
+			// 在一个store中多次注册同一个模块
+			// 如果使用一个纯粹的对象来声明模块的状态，name这个状态对象会通过引用被共享，导致状态对象被修改时store或者模块间数据问题、
+			// 实际上这个和vue组件内的data是同样的问题。所以使用一个函数来声明模块儿状态（2.30+支持）
+			state() {
+				return {
+					num: 3,
+				}
+			},
+			getters: {
+				getNum: (state)=> {
+					console.log(state);
+					return  state.num *3;
+				}
+			},
+		};
+
+		const store = new Vuex.Store({
+			state: {
+				count: 10,
+			},
+			modules: {
+				a,
+				b,
+				c,
+			}
+		})
+
+
+		/**
+		 * 模块儿的动态注册
+		 * 	之后可以通过store.state.myModule 和 store.state.nested.myModule 访问模块儿的状态
+		 * 	
+		 * 	模块儿动态注册功能使用使得其他Vue插件，在store中附加新模块儿的方式来使用Vuex状态管理。
+		 * 	
+		 * 	vuex-router-sync插件就是通过动态注册模块将vue-router和vuex结合在一起的。
+		 *
+		 *  store.unregisterModule(moduleName)动态的卸载模块。（注意，这个方法不能卸载静态模块，即创建store时声明的模块）
+		 *
+		 *  在注册一个新模块儿时候，很可能想要保留过去的state，例如从一个服务端渲染的饮用保留state。
+		 *  你可以通过preserveState选项将其归档：store.registerModule('a', moduleA, {preserveState: true})
+		 */
+		// store.registerModule('c', c, {preserveState: true});
+		
+
+		// createNamespacedHelpers 创建基于某个命名空间辅助函数。
+		// 它返回一个对象，对象里有新的绑定在给定命名空间值上的组件绑定辅助函数：
+		// const abc = Vuex.createNamespacedHelpers('a');
+		// console.log(abc)
+		// // const {mapState, mapGetters, mapMutations, mapActions} = Vuex.createNamespacedHelpers('b');
+		const {
+			mapState: mapState_B , 
+			mapGetters: mapGetters_B , 
+			mapMutations: mapMutations_B , 
+			mapActions: mapActions_B 
+		} = Vuex.createNamespacedHelpers('b');
+
+		/**
+		 * 创建子组件
+		 */
+		Vue.component('counter', {
+			template: '\
+			    <div>\
+			    	<p>{{ getCount }}</span>\
+			    	<p>{{ getCountPlusLocalState }}</p>\
+					<button v-on:click="increment">+</button>\
+					<br />\
+					<span>******** namespaced **********</span>\
+					<p>{{info}}</p>\
+					<button v-on:click="dealInfoAsync">+</button>\
+					<br />\
+					<span>******** 模块的重用 **********</span>\
+					<p>{{getNum}}</p>\
+			    </div>\
+			',
+
+			data: function() {
+				return{
+					localCount: 100,
+				}
+			},
+
+			computed: {
+				/*
+				mapState, mapGetters, mapActions 和 mapMutations 
+				这些函数来绑定命名空间模块时，写起来可能比较繁琐：
+				*/
+				// ...Vuex.mapState({
+				// 	// 这里的state 是不同子module的state的集合
+				// 	getCount: (state) => {
+				// 		console.log(state,2333);
+				// 		return state.a.count
+				// 	}, 
+				// 	getCountPlusLocalState: function({a, b, c, count}) {
+				// 		return a.count + count + this.localCount
+				// 	},
+				// }),
+
+
+				/*
+				带命名空间空间的绑定函数
+				对于这种情况，你可以将模块的空间名称字符串作为第一个参数传递给函数，
+				这样所有绑定都会自动将该模块作为上下文。于是上面的例子可以简化为：
+				 */
+				...Vuex.mapState("a", {
+					// 这里的state 是不同子module的state的集合
+					getCount: (state) => {
+						console.log(state,2333);
+						return state.count
+					}, 
+					getCountPlusLocalState: function(state) {
+						return state.count + this.localCount
+					},
+				}),
+				...Vuex.mapGetters('a', ['infoA']),
+
+
+				// 使用createNamespaceHelpers生成的辅助函数
+				...mapState_B({
+					getName: (state) => {
+						return state.name
+					}
+				}),
+				...mapGetters_B(['info']),
+
+
+				...Vuex.mapGetters('c', ['getNum'])
+			},
+			
+
+			methods: {
+
+			 /* ...Vuex.mapMutations([
+			    'a/increment',
+			    'a/callName',
+			    'b/dealInfo',
+			  	]),
+			  ...Vuex.mapActions([
+			  	'a/incrementIfOddOnRootSum',
+			  	'b/dealInfoAsync'
+			  	]),*/
+
+
+			  ...Vuex.mapMutations('a', ['increment','callName']),
+			  ...Vuex.mapActions('a', ['incrementIfOddOnRootSum']),
+
+			  // 使用createNamespaceHelpers生成的辅助函数
+			  ...mapMutations_B(['dealInfo']),
+			  ...mapActions_B(['dealInfoAsync']),
+
+				increment: function() {
+					this.$store.commit('a/increment', {amount: 10});	// 触发状态的改变	, 如果有命名空间，加上对应的模块路径名
+				},
+			},
+			created() {
+				this.$store.dispatch({
+					type: 'a/incrementIfOddOnRootSum',
+					amount: 10
+				})
+			}
+		}); 
+
+		/**
+		 *  创建跟组件
+		 */
+
+		let rootVm = new Vue({
+			el: ".app",
+			store,
+			data() {
+				return {}
+			},
+			template: '\
+				<div class="app">\
+			      <counter></counter>\
+			    </div>\
+			'
+		})
+
+	</script>
+</body>
+</html>

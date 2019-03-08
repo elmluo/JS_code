@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>查询计算出的属性</title>
+	<style>
+		.container{
+			color: rgba(10, 10, 30, .3);
+		}
+	</style>
+</head>
+<body>
+	<div class="container">getComputedStyle</div>
+	<button id="scale">scale</button>
+	<button id="scaleColor">scaleColor</button>
+	<script>
+		window.onload = function() {
+			oContainer = document.querySelector('.container');
+			oScaleBtn = document.querySelector('#scale');
+			oScaleColorBtn = document.querySelector('#scaleColor');
+
+			/**
+			 * 添加事件监听
+			 */
+			oScaleBtn.addEventListener('click', handleClickOScaleBtn);
+			oScaleColorBtn.addEventListener('click', handleClickOScaleColorBtn);
+
+			/**
+			 * 点击事件处理函数
+			 */
+			function handleClickOScaleBtn(e) {
+				scale(oContainer, 3);
+			}
+
+			function handleClickOScaleColorBtn(e) {
+				scaleColor(oContainer, 3);
+			}
+
+			/**
+			 * 放大文字
+			 * @param  {object} e      元素对象
+			 * @param  {number} factor 放大倍数
+			 * @return {null}        null
+			 */	
+			function scale(e, factor) {
+				var size = parseInt(window.getComputedStyle(e, '').fontSize);
+				e.style.fontSize = size * factor + "px";
+			}
+
+			/**
+			 * 用指定的因子修改元素e的背景颜色
+			 * @param  {object} e      目标DOM元素
+			 * @param  {number} factor 控制颜色的变量, factor > 1 颜色变浅， factory < 1 颜色变暗
+			 * @return {undefined}        不添加return默认返回undefined 
+			 */
+			function scaleColor(e, factor) {
+				var color = window.getComputedStyle(e, null).color;
+				items = color.match(/[\d\.]+/g);
+				for (var i = 0; i < 3; i++) {
+					var x = Number(items[i]) * factor;
+					x = Math.round(Math.min(Math.max(x, 0), 255));
+					items[i] = String(x);
+				}a
+				if (items.length === 3) {
+					e.style.backgroundColor = 'rgb(' + items.join(',')+ ')';
+				} else {
+					e.style.backgroundColor = 'rgba('+ items.join(',') +')';
+				}
+			}
+
+		}
+	</script>
+</body>
+</html>
