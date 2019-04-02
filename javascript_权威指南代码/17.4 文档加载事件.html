@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>文档加载事件</title>
+</head>
+<body>
+    <script>
+        /*
+        * 当文档准备就绪的时候。调用函数
+        */
+        var whenReady = (function(){
+            var  funcs = [];
+            var ready = false;
+
+            function handler(e) {
+                if (ready) return ;
+                if (e.type === "readstatechange" && document.readyState !== "complete") {
+                    return;
+                }
+                for(var i = 0; i < funcs.length; i++) {
+                    func[i].call(document);
+                }
+                ready = true;
+                funcs = null;
+            }
+
+            if (document.addEventListener) {
+                document.addEventListener('DOMContentLoaded', handler, false);
+                document.addEventListener('readystatechange', handler, false);
+                window.addEventListener('load', handler, false);
+            } else if (document.attachEvent) {
+                document.attachEvent('onreadystatechange', handler, false);
+                window.attachEvent('onload', handler);
+            }
+
+            return function whenReady(f) {
+                if (ready) {
+                    f.call(document);
+                } else {
+                    funcs.push(f);
+                }
+            }
+        }())
+    </script>
+</body>
+</html>

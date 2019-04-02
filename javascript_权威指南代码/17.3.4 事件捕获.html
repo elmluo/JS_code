@@ -1,9 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
 	<meta charset="UTF-8">
 	<title>事件捕获</title>
 </head>
+
 <body>
 	<div class="grandParent">
 		爷爷
@@ -14,35 +16,59 @@
 			</div>
 			<div class="child2" style="position: absolute; right: 0">
 				儿子2
+				<div class="grandson">
+					孙子
+				</div>
 			</div>
 		</div>
 	</div>
-	
+
 	<script>
 		// 通过冒泡的顺序（里——>外）儿子、爹、爷爷
-		// 安排上一步的顺序，遍历监听，如果该listener为true，则将该listenr放到队列首位。
-		window.onload = function() {
+		// 可以理解为 安排上一步的顺序，遍历监听，如果该listener为true，则将该listenr放到队列首位。
+		window.onload = function () {
 			oGp = document.querySelector('.grandParent');
 			oParent = document.querySelector('.parent');
 			oChild1 = document.querySelector('.child1');
 			oChild2 = document.querySelector('.child2');
-			oGp.addEventListener('mousedown', function(e) {
+			oGrandSon = document.querySelector('.grandson');
+			oGp.addEventListener('click', function (e) {
 				console.log('爷爷');
-				e.stopPropagation();
+				if (window.getSelection().toString().length > 0) {
+					console.log(window.getSelection());
+					// window.getSelection() 先与页面click点击执行。
+					e.stopPropagation();
+				}
+			}, true);
+			oParent.addEventListener('click', function (e) {
+				console.log('爹f');
 			}, false);
-			oParent.addEventListener('mousedown', function() {
-				console.log('爹f')
+			oParent.addEventListener('mousedown', function (e) {
+				console.log('爹t');
+			}, true);
+			oChild1.addEventListener('mousedown', function (e) {
+				console.log('儿子1');
 			}, false);
-			oParent.addEventListener('mousedown', function() {
-				console.log('爹t')
+			oChild2.addEventListener('mousedown', function (e) {
+				console.log('儿子2');
+			}, false);
+			oGrandSon.addEventListener('mousedown', function (e) {
+				console.log('孙子');
 			}, true);
-			oChild1.addEventListener('mousedown', function() {
-				console.log('儿子1')
-			}, true);
-			oChild2.addEventListener('mousedown', function() {
-				console.log('儿子2')
-			}, true);
+
+			// 页面选中事件
+			if (window.getSelection().toString().length > 0) {
+				console.log(window.getSelection());
+			}
 		}
+
+		// 如果在第一阶段：执行第一阶段中事件处理程序，只执行到操作的事件元素，上一个为true的元素。设置为stroPropagation(); 事件接下去的任何传播将被停止。
+		// 第二阶段：执行当前事件元素的，事件处理程序。
+		// 第三个阶段冒泡执行为false的事件处理程序。
+
+
+		// 也就是说如果我们是直接不通过addEventListener()函数来绑定事件的话，我们要禁止默认事件的话，用的就是return false。
 	</script>
 </body>
+
 </html>
