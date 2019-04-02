@@ -21,7 +21,7 @@
                     return;
                 }
                 for(var i = 0; i < funcs.length; i++) {
-                    func[i].call(document);
+                    funcs[i].call(document);
                 }
                 ready = true;
                 funcs = null;
