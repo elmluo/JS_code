@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>动态作用域核心代码的实现</title>
+</head>
+<body>
+    <script>
+        window.onload = function() {
+            globals = {}; // 变量的全局映射；
+
+            var makeBind = function(resolver) {
+                return function(key, value) {
+                    var stack = globals[key] || [];
+                    globals[key] = resolver(stack, v);
+                    return globals;
+                }
+            }
+
+            var stackBinder = makeBind(function(stack, v){
+                stack.push(v);
+                return stack;
+            });
+
+            var stackUnbinder = makeBind(function(stack){
+                stack.pop();
+                return stack;
+            });
+
+            var dynamicLookup = function(key) {
+                var solt = globals[key] || [];
+                return slot[slot.length - 1];
+            }
+        }
+    </script>
+</body>
+</html>
